@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>家庭用 非常用品チェックリスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red:#C0392B; --orange:#E67E22; --blue:#2471A3; --green:#1E8449; --purple:#6C3483;
+  --gray0:#FAFAFA; --gray1:#F2F3F4; --gray2:#D5D8DC; --gray3:#AAB7B8; --gray4:#717D7E; --gray5:#2C3E50;
+  --ink:#1A252F; --white:#FFFFFF; --radius:6px; --shadow:0 2px 8px rgba(0,0,0,.10);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--gray1);color:var(--ink);font-size:13px;line-height:1.6;}
+
+/* TOP BAR */
+#topbar{background:var(–ink);color:var(–white);padding:12px 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 3px 12px rgba(0,0,0,.25);}
+#topbar h1{font-size:15px;font-weight:700;letter-spacing:.04em;flex:1;}
+.pill{background:rgba(255,255,255,.12);border-radius:20px;padding:4px 12px;font-size:11px;font-family:‘DM Mono’,monospace;}
+#progress-bar-wrap{height:3px;background:rgba(255,255,255,.15);border-radius:2px;width:140px;overflow:hidden;}
+#progress-bar{height:100%;background:#2ECC71;border-radius:2px;transition:width .4s;width:0%;}
+
+/* LAYOUT */
+#app{display:flex;min-height:calc(100vh - 48px);}
+
+/* SIDEBAR */
+#sidebar{width:272px;min-width:272px;background:var(–white);border-right:1px solid var(–gray2);padding:16px 14px;overflow-y:auto;position:sticky;top:48px;height:calc(100vh - 48px);}
+#sidebar h2{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(–gray4);text-transform:uppercase;margin-bottom:10px;margin-top:18px;padding-bottom:4px;border-bottom:1px solid var(–gray2);}
+#sidebar h2:first-child{margin-top:0;}
+
+.setting-row{margin-bottom:10px;}
+.setting-row label.row-label{display:block;font-size:11px;font-weight:700;color:var(–gray5);margin-bottom:5px;}
+.toggle-group{display:flex;flex-wrap:wrap;gap:4px;}
+.toggle-btn{border:1.5px solid var(–gray2);background:var(–gray1);border-radius:4px;padding:4px 8px;font-size:11px;font-family:‘Noto Sans JP’,sans-serif;cursor:pointer;transition:all .15s;color:var(–gray5);user-select:none;line-height:1.4;}
+.toggle-btn:hover{border-color:var(–blue);color:var(–blue);}
+.toggle-btn.active{background:var(–blue);border-color:var(–blue);color:var(–white);font-weight:600;}
+select.setting-select{width:100%;border:1.5px solid var(–gray2);border-radius:4px;padding:6px 10px;font-family:‘Noto Sans JP’,sans-serif;font-size:12px;background:var(–gray1);color:var(–ink);cursor:pointer;}
+
+.legend-item{display:flex;align-items:center;gap:7px;margin-bottom:5px;font-size:11px;}
+.legend-badge{display:inline-block;border-radius:3px;padding:1px 7px;font-size:10px;font-weight:700;min-width:52px;text-align:center;}
+.badge-required{background:#FDECEA;color:var(–red);border:1px solid #F5B7B1;}
+.badge-recommend{background:#FEF9E7;color:#B7770D;border:1px solid #FAD7A0;}
+.badge-nice{background:#EBF5FB;color:var(–blue);border:1px solid #AED6F1;}
+
+.action-btns{display:flex;flex-direction:column;gap:6px;margin-top:6px;}
+.action-btn{border:none;border-radius:var(–radius);padding:8px;font-family:‘Noto Sans JP’,sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;text-align:center;}
+.btn-print{background:var(–ink);color:var(–white);}
+.btn-print:hover{background:#34495E;}
+.btn-reset{background:var(–gray1);color:var(–gray4);border:1px solid var(–gray2);}
+.btn-reset:hover{background:var(–gray2);}
+.btn-export{background:#1E8449;color:var(–white);}
+.btn-export:hover{background:#145A32;}
+
+.cat-nav{display:flex;flex-direction:column;gap:1px;}
+.cat-nav-item{padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:500;transition:background .12s;display:flex;justify-content:space-between;align-items:center;}
+.cat-nav-item:hover{background:var(–gray1);}
+.cat-count{font-family:‘DM Mono’,monospace;font-size:10px;color:var(–gray4);}
+
+/* MAIN */
+#main{flex:1;padding:20px;overflow-y:auto;}
+
+/* SUMMARY BAR */
+#summary-bar{background:var(–white);border-radius:var(–radius);padding:12px 18px;margin-bottom:16px;box-shadow:var(–shadow);}
+.summary-top{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+.summary-stat{text-align:center;}
+.summary-stat .num{font-size:20px;font-weight:900;font-family:‘DM Mono’,monospace;line-height:1;}
+.summary-stat .lbl{font-size:10px;color:var(–gray4);margin-top:1px;}
+.num-green{color:var(–green);} .num-red{color:var(–red);} .num-gray{color:var(–gray4);}
+.summary-progress{display:flex;align-items:center;gap:10px;}
+.summary-progress-bar-wrap{flex:1;height:6px;background:var(–gray2);border-radius:3px;overflow:hidden;}
+.summary-progress-bar{height:100%;background:var(–green);border-radius:3px;transition:width .4s;}
+.summary-progress-label{font-size:11px;font-family:‘DM Mono’,monospace;color:var(–gray5);white-space:nowrap;}
+
+/* TABS */
+#tabs{display:flex;gap:4px;margin-bottom:16px;background:var(–white);padding:6px;border-radius:var(–radius);box-shadow:var(–shadow);}
+.tab{flex:1;padding:7px;text-align:center;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;transition:all .15s;border:none;background:transparent;font-family:‘Noto Sans JP’,sans-serif;color:var(–gray4);}
+.tab:hover{background:var(–gray1);}
+.tab.active{background:var(–ink);color:var(–white);}
+.tab.hidden-tab{display:none;}
+
+/* FILTER BAR (共通) */
+.view-summary-bar{background:var(–white);border-radius:var(–radius);padding:10px 16px;margin-bottom:12px;box-shadow:var(–shadow);display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+.view-summary-stat{text-align:center;padding:0 8px;}
+.view-summary-stat .vsnum{font-size:18px;font-weight:900;font-family:‘DM Mono’,monospace;line-height:1;}
+.view-summary-stat .vslbl{font-size:10px;color:var(–gray4);margin-top:1px;}
+.view-summary-divider{width:1px;height:36px;background:var(–gray2);}
+.view-progress-wrap{flex:1;min-width:120px;}
+.view-progress-bar-bg{height:5px;background:var(–gray2);border-radius:3px;overflow:hidden;margin-bottom:3px;}
+.view-progress-bar-fill{height:100%;background:var(–green);border-radius:3px;transition:width .4s;}
+.view-progress-text{font-size:10px;color:var(–gray4);font-family:‘DM Mono’,monospace;}
+
+#search-wrap{margin-bottom:12px;}
+#search-input{width:100%;padding:8px 14px;border:1.5px solid var(–gray2);border-radius:var(–radius);font-family:‘Noto Sans JP’,sans-serif;font-size:13px;background:var(–white);box-shadow:var(–shadow);}
+#search-input:focus{outline:none;border-color:var(–blue);}
+.filter-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center;}
+.filter-label{font-size:11px;color:var(–gray4);}
+.filter-chip{border:1.5px solid var(–gray2);background:var(–white);border-radius:20px;padding:3px 10px;font-size:11px;cursor:pointer;font-family:‘Noto Sans JP’,sans-serif;transition:all .12s;color:var(–gray5);}
+.filter-chip:hover{border-color:var(–blue);}
+.filter-chip.active{background:var(–blue);border-color:var(–blue);color:var(–white);font-weight:600;}
+.filter-chip.active-green{background:var(–green);border-color:var(–green);color:var(–white);font-weight:600;}
+
+/* SECTION */
+.section{background:var(–white);border-radius:var(–radius);margin-bottom:14px;box-shadow:var(–shadow);overflow:hidden;}
+.section-header{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;user-select:none;border-bottom:1px solid var(–gray2);}
+.section-header:hover{background:var(–gray0);}
+.section-icon{font-size:16px;}
+.section-title{font-size:13px;font-weight:700;flex:1;}
+.section-stats{font-family:‘DM Mono’,monospace;font-size:11px;color:var(–gray4);}
+.section-toggle{font-size:11px;color:var(–gray4);transition:transform .2s;}
+.section.collapsed .section-toggle{transform:rotate(-90deg);}
+.section.collapsed .section-body{display:none;}
+
+/* TABLE */
+.item-table{width:100%;border-collapse:collapse;}
+.item-table th{background:var(–gray1);padding:6px 10px;font-size:10px;font-weight:700;color:var(–gray4);text-align:left;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(–gray2);white-space:nowrap;}
+.item-table td{padding:7px 10px;border-bottom:1px solid var(–gray2);vertical-align:top;font-size:12px;}
+.item-table tr:last-child td{border-bottom:none;}
+.item-table tr.hidden-item{display:none;}
+.item-table tr.dimmed-item td{opacity:.28;background:var(–gray0);}
+.item-table tr.checked-item td{background:#F0FBF4;}
+.item-table tr:hover:not(.dimmed-item) td{background:var(–gray0);}
+
+.check-cell{width:34px;text-align:center;vertical-align:middle!important;}
+input[type=checkbox].item-check{width:15px;height:15px;cursor:pointer;accent-color:var(–green);}
+.item-name{font-weight:600;line-height:1.4;}
+.item-name.checked-label{text-decoration:line-through;color:var(–gray3);font-weight:400;}
+.item-sub{font-size:11px;color:var(–gray5);margin-top:2px;line-height:1.5;}
+.item-location{font-size:10px;color:var(–blue);margin-top:2px;}
+.item-pack-badge{display:inline-block;font-size:10px;color:var(–green);font-weight:700;margin-left:4px;}
+
+.badge{display:inline-block;border-radius:3px;padding:1px 6px;font-size:10px;font-weight:700;white-space:nowrap;}
+.badge-r{background:#FDECEA;color:var(–red);}
+.badge-y{background:#FEF9E7;color:#9A7D0A;}
+.badge-b{background:#EBF5FB;color:var(–blue);}
+.phase-badge{display:inline-block;border-radius:3px;padding:1px 5px;font-size:10px;font-weight:700;}
+.phase-1{background:#FDECEA;color:var(–red);}
+.phase-2{background:#FEF9E7;color:#9A7D0A;}
+.phase-3{background:#EBF5FB;color:var(–blue);}
+
+.qty-cell{width:72px;}
+.qty-input{width:64px;border:1px solid var(–gray2);border-radius:3px;padding:2px 5px;text-align:center;font-family:‘DM Mono’,monospace;font-size:11px;background:transparent;}
+.qty-input:focus{outline:none;border-color:var(–blue);}
+
+/* OUTING / CAR ITEMS (統一UI) */
+.outing-section{background:var(–white);border-radius:var(–radius);margin-bottom:14px;box-shadow:var(–shadow);overflow:hidden;}
+.outing-table{width:100%;border-collapse:collapse;}
+.outing-table th{background:var(–gray1);padding:6px 10px;font-size:10px;font-weight:700;color:var(–gray4);text-align:left;letter-spacing:.06em;border-bottom:1px solid var(–gray2);}
+.outing-table td{padding:7px 10px;border-bottom:1px solid var(–gray2);vertical-align:top;font-size:12px;}
+.outing-table tr:last-child td{border-bottom:none;}
+.outing-table tr.outing-checked td{background:#F0FBF4;}
+.outing-table tr:hover td{background:var(–gray0);}
+.outing-name{font-weight:600;}
+.outing-name.checked-label{text-decoration:line-through;color:var(–gray3);font-weight:400;}
+.outing-detail{font-size:11px;color:var(–gray5);margin-top:1px;}
+.weight-badge{font-size:10px;color:var(–gray4);font-family:‘DM Mono’,monospace;}
+
+/* PREACTION */
+.preaction-item{display:flex;align-items:flex-start;gap:10px;padding:9px 14px;border-bottom:1px solid var(–gray2);}
+.preaction-item:last-child{border-bottom:none;}
+.preaction-item:hover{background:var(–gray0);}
+.preaction-item.preaction-done{background:#F0FBF4;}
+.preaction-check{width:15px;height:15px;cursor:pointer;accent-color:#6C3483;margin-top:2px;flex-shrink:0;}
+.preaction-body{flex:1;}
+.preaction-name{font-size:12px;font-weight:600;}
+.preaction-name.checked-label{text-decoration:line-through;color:var(–gray3);}
+.preaction-sub{font-size:11px;color:var(–gray5);margin-top:2px;}
+.preaction-target{font-size:10px;color:var(–purple);margin-top:2px;}
+
+/* TIPS BOX */
+.tips-box{background:var(–white);border-radius:var(–radius);padding:14px 18px;box-shadow:var(–shadow);margin-top:14px;}
+.tips-box h3{font-size:13px;font-weight:700;margin-bottom:8px;}
+.tips-box ul{font-size:12px;line-height:2;padding-left:18px;color:var(–gray5);}
+
+/* MOBILE SIDEBAR TOGGLE */
+#sidebar-toggle{display:none;width:100%;background:var(–white);color:var(–ink);border:none;border-top:1px solid var(–gray2);border-bottom:1px solid var(–gray2);padding:10px 16px;font-family:‘Noto Sans JP’,sans-serif;font-size:12px;font-weight:600;cursor:pointer;text-align:left;}
+#sidebar-toggle-arrow{transition:transform .2s;display:inline-block;margin-left:6px;font-size:10px;}
+#sidebar-toggle.open #sidebar-toggle-arrow{transform:rotate(180deg);}
+
+@media (max-width:700px){
+#app{flex-direction:column;}
+#sidebar-toggle{display:block;order:1;}
+#sidebar{width:100%;min-width:unset;height:auto;position:static;border-right:none;overflow:hidden;max-height:0;transition:max-height .35s ease;order:2;}
+#sidebar.open{max-height:2000px;border-bottom:1px solid var(–gray2);}
+#sidebar-inner{padding:12px 14px 16px;}
+#main{padding:12px 10px;order:3;}
+#tabs .tab{font-size:10px;padding:6px 3px;}
+.item-table th:nth-child(4),.item-table td:nth-child(4),
+.item-table th:nth-child(6),.item-table td:nth-child(6){display:none;}
+#topbar h1{font-size:13px;}
+#progress-bar-wrap{width:80px;}
+}
+
+@media print{
+#sidebar,#topbar,#sidebar-toggle,.action-btns,#search-wrap,.filter-row,#tabs,.qty-input{display:none!important;}
+body{background:white;font-size:11px;}
+#app{display:block;}
+#main{padding:8px;}
+.section.collapsed .section-body{display:block!important;}
+.dimmed-item{display:none!important;}
+.item-table th,.item-table td{padding:3px 6px;}
+#summary-bar{box-shadow:none;border:1px solid #ddd;}
+}
+</style>
+
+</head>
+<body>
+<div id="topbar">
+  <h1>🆘 家庭用 非常用品チェックリスト</h1>
+  <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+  <span class="pill" id="topbar-stat">0 / 0 入手済み</span>
+</div>
+
+<div id="app">
+<button id="sidebar-toggle" onclick="toggleSidebar()">⚙️ 設定・凡例<span id="sidebar-toggle-arrow">▼</span></button>
+<div id="sidebar">
+<div id="sidebar-inner">
+  <h2>⚙️ 家族・住環境の設定</h2>
+  <div class="setting-row">
+    <label class="row-label">家族構成</label>
+    <div class="toggle-group">
+      <button class="toggle-btn" data-key="solo" onclick="toggleSetting(this)">一人暮らし</button>
+      <button class="toggle-btn" data-key="couple" onclick="toggleSetting(this)">夫婦2人</button>
+      <button class="toggle-btn" data-key="adults3" onclick="toggleSetting(this)">大人3人以上</button>
+      <button class="toggle-btn" data-key="baby" onclick="toggleSetting(this)">乳幼児あり</button>
+      <button class="toggle-btn" data-key="kids" onclick="toggleSetting(this)">小学生以上の子</button>
+      <button class="toggle-btn" data-key="elder" onclick="toggleSetting(this)">高齢者同居</button>
+      <button class="toggle-btn" data-key="pet" onclick="toggleSetting(this)">ペットあり</button>
+      <button class="toggle-btn" data-key="pregnant" onclick="toggleSetting(this)">妊婦・授乳中</button>
+    </div>
+  </div>
+  <div class="setting-row">
+    <label class="row-label">住居タイプ</label>
+    <div class="toggle-group">
+      <button class="toggle-btn" data-key="mansion_high" onclick="toggleSetting(this)">マンション高層（4F以上）</button>
+      <button class="toggle-btn" data-key="mansion_low" onclick="toggleSetting(this)">マンション低層（1〜3F）</button>
+      <button class="toggle-btn" data-key="house" onclick="toggleSetting(this)">戸建て</button>
+    </div>
+  </div>
+  <div class="setting-row">
+    <label class="row-label">立地・ハザード</label>
+    <div class="toggle-group">
+      <button class="toggle-btn" data-key="coast" onclick="toggleSetting(this)">海・川沿い（浸水・津波）</button>
+      <button class="toggle-btn" data-key="mountain" onclick="toggleSetting(this)">山・丘陵地（土砂）</button>
+    </div>
+  </div>
+  <div class="setting-row">
+    <label class="row-label">車</label>
+    <div class="toggle-group">
+      <button class="toggle-btn" data-key="car" onclick="toggleSetting(this)">車あり</button>
+    </div>
+  </div>
+  <div class="setting-row">
+    <label class="row-label">優先度フィルタ</label>
+    <select class="setting-select" id="priority-filter" onchange="applyFilters()">
+      <option value="all">すべて表示</option>
+      <option value="required">🔴 必須のみ</option>
+      <option value="required,recommend">🔴+🟡 必須・推奨のみ</option>
+    </select>
+  </div>
+
+  <h2>📊 凡例</h2>
+  <div class="legend-item"><span class="legend-badge badge-required">🔴 必須</span>命に直結・最優先</div>
+  <div class="legend-item"><span class="legend-badge badge-recommend">🟡 推奨</span>1週間の生活維持に必要</div>
+  <div class="legend-item"><span class="legend-badge badge-nice">🔵 あると安心</span>余裕があれば備えたい</div>
+  <div style="margin-top:8px;">
+    <div class="legend-item" style="font-size:10px;color:var(--gray4);margin-bottom:4px;">フェーズ</div>
+    <div class="legend-item"><span class="phase-badge phase-1">P1</span>発災〜72時間</div>
+    <div class="legend-item"><span class="phase-badge phase-2">P2</span>4〜7日目</div>
+    <div class="legend-item"><span class="phase-badge phase-3">P3</span>1週間〜1ヶ月</div>
+  </div>
+  <div style="margin-top:8px;">
+    <div class="legend-item"><span style="font-size:13px;">🎒</span><span style="font-size:11px;">避難リュックに入れる品目</span></div>
+  </div>
+
+  <h2>🔗 カテゴリ</h2>
+  <div class="cat-nav" id="cat-nav"></div>
+
+  <h2>⚡ アクション</h2>
+  <div class="action-btns">
+    <button class="action-btn btn-print" onclick="window.print()">🖨️ 印刷する</button>
+    <button class="action-btn btn-export" onclick="exportCSV()">📥 CSV書き出し</button>
+    <button class="action-btn btn-reset" onclick="resetAll()">🔄 チェックをリセット</button>
+  </div>
+</div><!-- /sidebar-inner -->
+</div><!-- /sidebar -->
+
+<div id="main">
+  <div id="tabs">
+    <button class="tab active" data-view="home" onclick="switchTab(this)">🏠 備蓄品リスト</button>
+    <button class="tab" data-view="preaction" onclick="switchTab(this)">✅ 事前対処リスト</button>
+    <button class="tab" data-view="outing" onclick="switchTab(this)">👜 外出時リスト</button>
+    <button class="tab" data-view="car" id="tab-car" onclick="switchTab(this)">🚗 車載リスト</button>
+  </div>
+
+  <!-- ── 備蓄品リスト ── -->
+
+  <div id="view-home">
+    <div id="summary-bar">
+      <div class="summary-top">
+        <div class="summary-stat">
+          <div class="num num-green" id="stat-checked">0</div>
+          <div class="lbl">入手済み</div>
+        </div>
+        <div class="summary-stat">
+          <div class="num num-red" id="stat-remain">0</div>
+          <div class="lbl">未入手</div>
+        </div>
+        <div class="summary-stat">
+          <div class="num num-red" id="stat-req-remain">0</div>
+          <div class="lbl">必須・未入手</div>
+        </div>
+        <div class="summary-stat">
+          <div class="num num-gray" id="stat-total">0</div>
+          <div class="lbl">品目数</div>
+        </div>
+        <div style="flex:1"></div>
+        <div style="font-size:10px;color:var(--gray4);">グレーアウト＝設定に<br>該当しない品目</div>
+      </div>
+      <div class="summary-progress">
+        <span style="font-size:11px;color:var(--gray4);">進捗</span>
+        <div class="summary-progress-bar-wrap">
+          <div class="summary-progress-bar" id="summary-progress-fill" style="width:0%"></div>
+        </div>
+        <span class="summary-progress-label" id="summary-progress-label">0 / 0 件入手済み</span>
+      </div>
+    </div>
+
+```
+<div id="search-wrap"><input id="search-input" type="text" placeholder="🔍 品目名・説明で検索..." oninput="applyFilters()"></div>
+<div class="filter-row">
+  <span class="filter-label">フェーズ：</span>
+  <button class="filter-chip active" data-phase="all" onclick="togglePhase(this)">すべて</button>
+  <button class="filter-chip" data-phase="1" onclick="togglePhase(this)">P1 発災〜72h</button>
+  <button class="filter-chip" data-phase="2" onclick="togglePhase(this)">P2 4〜7日</button>
+  <button class="filter-chip" data-phase="3" onclick="togglePhase(this)">P3 1週間〜</button>
+  <button class="filter-chip" data-pack="true" id="chip-pack" onclick="togglePackFilter(this)">🎒 持ち出し</button>
+</div>
+<div id="sections-container"></div>
+```
+
+  </div>
+
+  <!-- ── 事前対処リスト ── -->
+
+  <div id="view-preaction" style="display:none">
+    <div class="view-summary-bar" id="preaction-summary">
+      <div class="view-summary-stat">
+        <div class="vsnum num-green" id="pre-stat-done">0</div>
+        <div class="vslbl">実施済み</div>
+      </div>
+      <div class="view-summary-divider"></div>
+      <div class="view-summary-stat">
+        <div class="vsnum num-red" id="pre-stat-remain">0</div>
+        <div class="vslbl">未実施</div>
+      </div>
+      <div class="view-summary-divider"></div>
+      <div class="view-summary-stat">
+        <div class="vsnum num-gray" id="pre-stat-total">0</div>
+        <div class="vslbl">項目数</div>
+      </div>
+      <div class="view-summary-divider"></div>
+      <div class="view-progress-wrap">
+        <div class="view-progress-bar-bg"><div class="view-progress-bar-fill" id="pre-progress-fill" style="width:0%"></div></div>
+        <div class="view-progress-text" id="pre-progress-label">0 / 0 件実施済み</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header" onclick="toggleSection('preaction-main')">
+        <span class="section-icon">✅</span>
+        <span class="section-title">災害前にやっておくこと</span>
+        <span class="section-toggle">▼</span>
+      </div>
+      <div class="section-body" id="preaction-list"></div>
+    </div>
+  </div>
+
+  <!-- ── 外出時リスト ── -->
+
+  <div id="view-outing" style="display:none">
+    <div class="view-summary-bar">
+      <div class="view-summary-stat">
+        <div class="vsnum num-green" id="outing-stat-done">0</div>
+        <div class="vslbl">入手済み</div>
+      </div>
+      <div class="view-summary-divider"></div>
+      <div class="view-summary-stat">
+        <div class="vsnum num-red" id="outing-stat-remain">0</div>
+        <div class="vslbl">未入手</div>
+      </div>
+      <div class="view-summary-divider"></div>
+      <div class="view-summary-stat">
+        <div class="vsnum num-gray" id="outing-stat-total">0</div>
+        <div class="vslbl">品目数</div>
+      </div>
+      <div class="view-summary-divider"></div>
+      <div class="view-progress-wrap">
+        <div class="view-progress-bar-bg"><div class="view-progress-bar-fill" id="outing-progress-fill" style="width:0%"></div></div>
+        <div class="view-progress-text" id="outing-progress-label">0 / 0 件入手済み</div>
+      </div>
+    </div>
+    <div class="outing-section">
+      <div class="section-header" onclick="toggleSection('outing-main')">
+        <span class="section-icon">👜</span>
+        <span class="section-title">外出時 携帯リスト</span>
+        <span class="section-stats" style="font-size:10px;color:var(--gray4);">目安：合計500g以内　バッグに常時入れておく帰宅難民対策セット</span>
+        <span class="section-toggle">▼</span>
+      </div>
+      <div class="section-body">
+        <table class="outing-table" id="outing-table">
+          <thead><tr>
+            <th style="width:34px">✓</th>
+            <th>品目・用途</th>
+            <th style="width:80px">目安重量</th>
+          </tr></thead>
+          <tbody id="outing-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 車載リスト ── -->
+
+  <div id="view-car" style="display:none">
+    <div class="view-summary-bar">
+      <div class="view-summary-stat">
+        <div class="vsnum num-green" id="car-stat-done">0</div>
+        <div class="vslbl">入手済み</div>
+      </div>
+      <div class="view-summary-divider"></div>
+      <div class="view-summary-stat">
+        <div class="vsnum num-red" id="car-stat-remain">0</div>
+        <div class="vslbl">未入手</div>
+      </div>
+      <div class="view-summary-divider"></div>
+      <div class="view-summary-stat">
+        <div class="vsnum num-gray" id="car-stat-total">0</div>
+        <div class="vslbl">品目数</div>
+      </div>
+      <div class="view-summary-divider"></div>
+      <div class="view-progress-wrap">
+        <div class="view-progress-bar-bg"><div class="view-progress-bar-fill" id="car-progress-fill" style="width:0%"></div></div>
+        <div class="view-progress-text" id="car-progress-label">0 / 0 件入手済み</div>
+      </div>
+    </div>
+    <div class="outing-section">
+      <div class="section-header" onclick="toggleSection('car-main')">
+        <span class="section-icon">🚗</span>
+        <span class="section-title">車載 常備リスト</span>
+        <span class="section-stats" style="font-size:10px;color:var(--gray4);">運転中・駐車中の被災を想定。トランクまたは車内に常時積んでおく</span>
+        <span class="section-toggle">▼</span>
+      </div>
+      <div class="section-body">
+        <table class="outing-table" id="car-table">
+          <thead><tr>
+            <th style="width:34px">✓</th>
+            <th>品目・用途</th>
+          </tr></thead>
+          <tbody id="car-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tips-box">
+      <h3>💡 車載備蓄のポイント</h3>
+      <ul>
+        <li>ガソリンは残量が半分になったら給油を習慣化。災害直後は給油渋滞が発生</li>
+        <li>夏場の車内は高温になるため、食料・薬は熱に強いものを選ぶ</li>
+        <li>水害時は車ごと流されるリスクがある。低地・アンダーパスは通らない</li>
+        <li>車中泊の際は一酸化炭素中毒に注意。定期的に換気を</li>
+        <li>緊急脱出ハンマーは運転席から手が届く位置に固定</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// ═══════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════
+
+const CATEGORIES = [
+  {
+    id:"water", icon:"💧", title:"水・飲料水",
+    items:[
+      {name:"飲料水（ペットボトル）", sub:"用途：飲料・調理・服薬用。1人1日3L×7日分が目安（2Lボトルが保管しやすい）", location:"📍涼しい収納スペース・押し入れ", priority:"required", phase:1, flags:"all", qty:"21L/人", pack:true},
+      {name:"ウォータータンク（折りたたみ）", sub:"用途：給水車・川からの水を運ぶ。10〜20L容量推奨。使わない時はコンパクトに収納", location:"📍玄関・収納スペース", priority:"required", phase:1, flags:"all", qty:"1〜2個"},
+      {name:"生活用水タンク（大型）", sub:"用途：トイレ・洗い物・清拭用。高層マンションは特に多めに備蓄（エレベーター停止で給水車から水を運べない）", location:"📍浴室・洗面所付近", priority:"required", phase:1, flags:"all", qty:"100L以上"},
+      {name:"浄水器・携帯浄水ストロー", sub:"用途：川・水道水を飲料水に変換。LifeStraw等。浄水タブレットとセットで活用", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"1個", pack:true},
+      {name:"浄水タブレット（塩素系）", sub:"用途：水の殺菌・浄化。Aquatabs等。水1Lあたり1錠で安全な飲料水に", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"1箱", pack:true},
+      {name:"井戸・雨水タンク", sub:"用途：長期断水時の生活用水源。設置工事が必要だが最強の水インフラ", location:"📍庭・屋外", priority:"nice", phase:3, flags:["house"], qty:"検討"},
+      {name:"赤ちゃん用ミルク調整水（軟水）", sub:"用途：粉ミルク調製用。硬水不可・必ず軟水を使用。液体ミルクとあわせて備蓄", location:"📍育児用品収納", priority:"required", phase:1, flags:["baby"], qty:"多め"},
+    ]
+  },
+  {
+    id:"food", icon:"🍚", title:"食料・非常食",
+    items:[
+      {name:"アルファ米（白米・炊き込み）", sub:"用途：主食。水またはお湯を注ぐだけで食べられる。5年保存。バリエーションを揃えると避難疲れが軽減", location:"📍収納スペース・押し入れ", priority:"required", phase:1, flags:"all", qty:"1食/人/日×7", pack:true},
+      {name:"缶詰（魚・肉・豆類）", sub:"用途：主菜・タンパク源。プルトップ缶を選ぶと缶切り不要。種類を多く揃えて食事に変化を", location:"📍収納スペース", priority:"required", phase:1, flags:"all", qty:"1缶/人/日×7", pack:true},
+      {name:"カップ麺・インスタント麺", sub:"用途：簡易主食。お湯があれば食べられる。ローリングストックで鮮度維持を。食べ慣れた味が精神的安定に効果的", location:"📍収納スペース", priority:"required", phase:1, flags:"all", qty:"7食/人"},
+      {name:"クラッカー・乾パン", sub:"用途：水なしでも食べられる主食・間食。賞味期限が長いものを選ぶ", location:"📍収納スペース・避難リュック", priority:"required", phase:1, flags:"all", qty:"2〜3箱", pack:true},
+      {name:"レトルト食品（カレー・パスタソース等）", sub:"用途：主食・副食。湯煎または水でも可能な製品を選ぶ。アルファ米と組み合わせると食事の質が上がる", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"14食/人"},
+      {name:"栄養補助食品（カロリーメイト等）", sub:"用途：短期集中エネルギー補給・携帯食。バラバラにならないよう箱ごと保管", location:"📍避難リュック・収納スペース", priority:"recommend", phase:1, flags:"all", qty:"5〜10箱", pack:true},
+      {name:"チョコ・飴・ドライフルーツ", sub:"用途：即時エネルギー補給＋精神的安定。甘いものが心を落ち着かせる効果は被災経験者の証言でも多数", location:"📍避難リュック", priority:"recommend", phase:1, flags:"all", qty:"適量", pack:true},
+      {name:"粉末スープ・インスタント味噌汁", sub:"用途：温かい食事による精神的安定。体が温まることで気力が回復する", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"適量"},
+      {name:"乳幼児用ミルク（粉ミルク・液体ミルク）", sub:"用途：授乳できない・母乳が出ない場合の代替栄養源。液体ミルクは開封してそのまま飲める点が非常時に有利", location:"📍育児用品収納", priority:"required", phase:1, flags:["baby"], qty:"7日分", pack:true},
+      {name:"ベビーフード（瓶詰・レトルト）", sub:"用途：離乳食期の子どもの食事。月齢に合わせて種類を揃える", location:"📍育児用品収納", priority:"required", phase:1, flags:["baby"], qty:"7日分"},
+      {name:"高齢者向け介護食・やわらか食", sub:"用途：嚥下困難な方の食事確保。レトルト介護食は常温保存可能", location:"📍収納スペース", priority:"required", phase:1, flags:["elder"], qty:"7日分"},
+      {name:"ペット用フード（ドライ・ウェット）", sub:"用途：ペットの食事確保。普段のフードを最低14日分ローリングストック", location:"📍収納スペース", priority:"required", phase:1, flags:["pet"], qty:"14日分"},
+      {name:"塩・砂糖・醤油（小分けパック）", sub:"用途：調味料。意外と忘れがちだが味気のない食事は精神的消耗を招く", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"適量"},
+      {name:"アレルギー対応食品", sub:"用途：アレルギーのある家族の食事確保。家族のアレルギーに応じて必ず別途備蓄", location:"📍収納スペース", priority:"required", phase:1, flags:"all", qty:"必要分"},
+    ]
+  },
+  {
+    id:"cooking", icon:"🔥", title:"調理・熱源・暖房",
+    items:[
+      {name:"カセットコンロ", sub:"用途：調理・湯沸かし。IHは停電時に使えないため必携。カセットガスストーブと燃料を共用できる", location:"📍キッチン付近", priority:"required", phase:1, flags:"all", qty:"1台"},
+      {name:"カセットボンベ", sub:"用途：コンロ・ストーブの燃料。1本で約60分使用。最低15本（7日分）を目安に備蓄", location:"📍収納スペース・直射日光を避けた場所", priority:"required", phase:1, flags:"all", qty:"15本以上"},
+      {name:"カセットガスストーブ（屋内用）", sub:"用途：暖房。カセットボンベと共用できるため燃料管理が簡単。マンションでも使用可能。換気必須", location:"📍収納スペース・リビング", priority:"required", phase:1, flags:"all", qty:"1台"},
+      {name:"石油ストーブ＋灯油", sub:"用途：暖房・湯沸かし。ストーブ上で調理もできる。灯油を18L缶で備蓄。換気必須", location:"📍収納スペース・屋外倉庫", priority:"recommend", phase:1, flags:["house"], qty:"1台＋18L缶"},
+      {name:"固形燃料・アルコールストーブ", sub:"用途：カセットガスが切れた時のバックアップ。コンパクトで避難リュックにも", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"1セット", pack:true},
+      {name:"バーベキューグリル・七輪", sub:"用途：屋外での本格調理。マンションは駐車場・公開スペース等での使用を管理規約確認。非常時は柔軟に。炭も備蓄を", location:"📍屋外倉庫・ベランダ", priority:"nice", phase:3, flags:"all", qty:"1台"},
+      {name:"耐熱ビニール袋（湯煎調理用）", sub:"用途：食材を袋に入れて湯煎調理。鍋を汚さず洗い物が出ない。水の節約に直結", location:"📍キッチン収納", priority:"recommend", phase:1, flags:"all", qty:"1箱"},
+      {name:"紙皿・紙コップ・割り箸", sub:"用途：洗い物ゼロ作戦。断水時は食器を洗えないため使い捨て食器が必須", location:"📍収納スペース", priority:"recommend", phase:1, flags:"all", qty:"50枚以上"},
+      {name:"ラップフィルム", sub:"用途：皿に巻いて汚れを防ぎ使いまわす・食品の保存・調理補助", location:"📍キッチン収納", priority:"recommend", phase:1, flags:"all", qty:"2〜3本"},
+      {name:"アルミホイル", sub:"用途：食材を包んで直火調理・保温・応急的な防寒材にも", location:"📍キッチン収納", priority:"recommend", phase:1, flags:"all", qty:"1〜2本"},
+      {name:"着火剤・ライター", sub:"用途：コンロ・ストーブ・ろうそくへの着火。防水ライターを複数本分散保管", location:"📍キッチン・避難リュック", priority:"required", phase:1, flags:"all", qty:"3〜5個", pack:true},
+      {name:"湯たんぽ", sub:"用途：暖房。お湯を沸かせれば繰り返し使えてカイロより経済的。布で包んで布団に入れると翌朝まで温かい", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"人数分"},
+    ]
+  },
+  {
+    id:"power", icon:"⚡", title:"電力・照明",
+    items:[
+      {name:"ポータブル電源（蓄電池式）", sub:"用途：停電時の電力の要。スマホ・ランタン・医療機器・小型家電を充電。1kWh以上推奨。ソーラーパネルと組み合わせれば長期運用可能", location:"📍リビング・すぐ取り出せる場所", priority:"required", phase:1, flags:"all", qty:"1台"},
+      {name:"ソーラーパネル（充電用）", sub:"用途：ポータブル電源への充電。100〜200W折りたたみ式が実用的。晴天時に電力を自給できる。車での移動時も使用可能", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"1枚"},
+      {name:"モバイルバッテリー（大容量）", sub:"用途：スマホ・タブレットの充電。20,000mAh以上推奨。ポータブル電源がない場合は特に必須", location:"📍普段使いのバッグ・枕元", priority:"required", phase:1, flags:"all", qty:"1〜2個/人", pack:true},
+      {name:"充電ケーブル（Lightning/USB-C/Micro）", sub:"用途：各機器の充電。対応機種に合わせて複数本備蓄。断線は多いので予備多めに", location:"📍枕元・避難リュック", priority:"required", phase:1, flags:"all", qty:"各2本", pack:true},
+      {name:"乾電池（単1・単2・単3・単4）", sub:"用途：ラジオ・懐中電灯・各種機器の電源。特に単1・単2は見落としやすく店頭でも売り切れやすい。各10本以上", location:"📍収納スペース", priority:"required", phase:1, flags:"all", qty:"各10本以上", pack:true},
+      {name:"LED懐中電灯（防水）", sub:"用途：停電時の移動・作業用照明。単3電池式が汎用的。枕元に常備しておくと就寝中の地震に対応できる", location:"📍枕元・玄関", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"LEDランタン", sub:"用途：部屋全体の照明。充電式が経済的。テーブルに置いて食事・作業ができる明るさが重要", location:"📍リビング・各部屋", priority:"required", phase:1, flags:"all", qty:"2〜3個"},
+      {name:"ヘッドライト", sub:"用途：両手が使える照明。夜間の作業・避難移動に必須。懐中電灯の上位互換", location:"📍枕元・避難リュック", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"ハンドクランク充電ラジオ", sub:"用途：停電時の情報収集＋緊急充電。電池不要で手回し発電。ラジオ・充電・ライト機能が一体型のものが最も効率的", location:"📍リビング・収納スペース", priority:"required", phase:1, flags:"all", qty:"1台"},
+      {name:"ろうそく・防災キャンドル", sub:"用途：電池・充電切れ時の最終照明手段。長時間タイプ推奨。使用時は必ず換気・転倒防止対策を", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"10本以上"},
+      {name:"乾電池式充電器", sub:"用途：乾電池でスマホを充電できる最終手段。ポータブル電源・モバイルバッテリーが切れた時用", location:"📍避難リュック", priority:"recommend", phase:1, flags:"all", qty:"1個", pack:true},
+      {name:"発電機（ガソリン・カセット式）", sub:"用途：大容量の電力確保。排気ガスが出るため屋外専用。マンションは使いにくい。エンジン音が大きく住宅密集地では使いづらい面もある", location:"📍屋外倉庫・ガレージ", priority:"nice", phase:3, flags:["house"], qty:"検討"},
+    ]
+  },
+  {
+    id:"medical", icon:"🩺", title:"医療・救急",
+    items:[
+      {name:"救急箱（絆創膏・ガーゼ・包帯・三角巾）", sub:"用途：外傷・切り傷・捻挫への応急処置。大・中・小サイズをそれぞれ複数枚", location:"📍洗面所・収納スペース", priority:"required", phase:1, flags:"all", qty:"1セット", pack:true},
+      {name:"消毒液（アルコール・ポビドンヨード）", sub:"用途：傷口の消毒。断水時は水道水で洗えないため消毒液の重要性が増す", location:"📍洗面所・救急箱", priority:"required", phase:1, flags:"all", qty:"各1本", pack:true},
+      {name:"鎮痛解熱剤（ロキソニン・カロナール等）", sub:"用途：頭痛・発熱・歯痛・打撲痛への対処。避難ストレスで体の不調が出やすい。複数種類あると安心", location:"📍救急箱", priority:"required", phase:1, flags:"all", qty:"30錠以上", pack:true},
+      {name:"胃腸薬・整腸剤", sub:"用途：避難ストレス・水や食事の変化による消化器症状への対処。下痢は脱水を招くため特に重要", location:"📍救急箱", priority:"required", phase:1, flags:"all", qty:"1箱", pack:true},
+      {name:"下痢止め・吐き気止め", sub:"用途：感染性胃腸炎・食あたりへの対処。避難所では集団感染リスクが高い", location:"📍救急箱", priority:"recommend", phase:1, flags:"all", qty:"1箱", pack:true},
+      {name:"風邪薬（総合感冒薬）", sub:"用途：発熱・鼻水・咳への対処。総合型の方が症状別より管理しやすい", location:"📍救急箱", priority:"recommend", phase:1, flags:"all", qty:"1箱"},
+      {name:"処方薬（3〜4週間分）", sub:"用途：持病の継続治療。災害時は医療機関が混雑・機能停止することがある。主治医に相談して多めに処方してもらう", location:"📍救急箱・枕元", priority:"required", phase:1, flags:"all", qty:"4週間分", pack:true},
+      {name:"お薬手帳コピー＋スキャンデータ", sub:"用途：避難先の医療機関での診療補助・薬の再処方。クラウドにも保存しておく。高齢者のいる家庭では特に重要", location:"📍避難リュック・クラウド", priority:"required", phase:1, flags:"all", qty:"1部", pack:true},
+      {name:"体温計", sub:"用途：発熱の確認。デジタル式・非接触式を複数本備蓄", location:"📍救急箱", priority:"required", phase:1, flags:"all", qty:"2本"},
+      {name:"血圧計", sub:"用途：高血圧の管理。避難ストレスで血圧が急上昇することがある", location:"📍収納スペース", priority:"required", phase:1, flags:["elder"], qty:"1個"},
+      {name:"マスク（不織布・N95）", sub:"用途：感染症予防・粉塵対策。避難所での集団感染防止に不可欠。100枚以上備蓄推奨", location:"📍収納スペース・避難リュック", priority:"required", phase:1, flags:"all", qty:"100枚以上", pack:true},
+      {name:"使い捨て手袋（ニトリル）", sub:"用途：救護・感染症対処・清掃・トイレ処理。素手で触れないための基本", location:"📍収納スペース・救急箱", priority:"required", phase:1, flags:"all", qty:"100枚以上", pack:true},
+      {name:"目薬", sub:"用途：粉塵・煙・乾燥による目のケア。コンタクトレンズ使用者は特に重要", location:"📍救急箱", priority:"recommend", phase:1, flags:"all", qty:"2本", pack:true},
+      {name:"生理用品", sub:"用途：生理・不正出血への対処。避難ストレスで生理が乱れることも多い。女性がいる家庭は必須。3ヶ月分を目安に", location:"📍収納スペース", priority:"required", phase:1, flags:"all", qty:"3ヶ月分", pack:true},
+      {name:"妊婦用サプリ・鉄剤", sub:"用途：妊娠中の栄養補助。特に鉄分・葉酸は不足しやすい", location:"📍収納スペース", priority:"required", phase:1, flags:["pregnant"], qty:"2ヶ月分", pack:true},
+      {name:"母子手帳・診察券のコピー", sub:"用途：避難先での医療情報の提供。スキャンしてクラウド保存も", location:"📍避難リュック", priority:"required", phase:1, flags:["baby","pregnant"], qty:"1部", pack:true},
+      {name:"紙おむつ", sub:"用途：乳幼児の排泄処理。1日8〜10枚前後が目安。2週間分以上を備蓄", location:"📍育児用品収納", priority:"required", phase:1, flags:["baby"], qty:"2週間分以上", pack:true},
+      {name:"おしりふき", sub:"用途：乳幼児のおむつ替え・全身の清拭・手拭きにも応用可。大量備蓄推奨", location:"📍育児用品収納", priority:"required", phase:1, flags:["baby"], qty:"大量", pack:true},
+      {name:"介護用おむつ・パッド", sub:"用途：高齢者・寝たきりの方の排泄処理。避難所でのプライバシー確保にも", location:"📍収納スペース", priority:"required", phase:1, flags:["elder"], qty:"2週間分"},
+      {name:"ペット用常備薬", sub:"用途：ペットの持病継続治療。かかりつけ医に相談し1〜2ヶ月分確保", location:"📍ペット用品収納", priority:"required", phase:1, flags:["pet"], qty:"1〜2ヶ月分", pack:true},
+      {name:"老眼鏡の予備", sub:"用途：視力矯正。コンタクトが使えない・メガネが壊れた場合の代替。高齢者は特に忘れずに", location:"📍枕元・避難リュック", priority:"required", phase:1, flags:["elder"], qty:"1本", pack:true},
+      {name:"予備のメガネ・コンタクトレンズ", sub:"用途：視力矯正。就寝中の地震でメガネが行方不明になるケースが多い。枕元保管が鉄則", location:"📍枕元", priority:"required", phase:1, flags:"all", qty:"1セット/人", pack:true},
+      {name:"AED（自動体外式除細動器）", sub:"用途：心停止時の蘇生補助。マンションは共用部に設置されていることが多いので場所を確認。戸建て・高齢者同居なら導入を検討", location:"📍玄関・リビング付近", priority:"nice", phase:3, flags:["elder","house"], qty:"検討"},
+    ]
+  },
+  {
+    id:"sanitation", icon:"🚽", title:"トイレ・衛生",
+    items:[
+      {name:"簡易トイレ袋＋凝固剤", sub:"用途：断水時の排泄処理。1人1日5〜8回として計算。市販の凝固剤セットが使いやすい。ペット砂でも代用可", location:"📍トイレ付近・収納スペース", priority:"required", phase:1, flags:"all", qty:"100回分以上"},
+      {name:"組み立て式簡易トイレ台", sub:"用途：便座式でしゃがまずに使える。段ボール製は軽量で処分も簡単。プラスチック製は繰り返し使える", location:"📍トイレ付近", priority:"recommend", phase:1, flags:"all", qty:"1台"},
+      {name:"BOS防臭袋（使用済みトイレ袋・おむつ用）", sub:"用途：使用済みトイレ袋・おむつの防臭保管。1袋ずつ入れて密閉するのが鉄則。においを完全にシャットアウトできる", location:"📍トイレ付近・収納スペース", priority:"required", phase:1, flags:"all", qty:"大量"},
+      {name:"密閉ゴミ箱・バケツ（フタ付き）", sub:"用途：使用済みトイレ袋の一時保管。フタ付きで密閉できるものが必須。収集が再開するまでの保管に", location:"📍トイレ付近", priority:"required", phase:1, flags:"all", qty:"1〜2個"},
+      {name:"目隠しテント・パーテーション", sub:"用途：トイレ・着替えのプライバシー確保。精神的健康に直結。避難所・屋外避難時に特に重要", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"1個"},
+      {name:"手指消毒ジェル", sub:"用途：水が使えない時の手指の感染症対策。トイレ後・食事前は必ず使用", location:"📍各部屋・避難リュック", priority:"required", phase:1, flags:"all", qty:"5本以上", pack:true},
+      {name:"ウェットティッシュ（ノンアルコール）", sub:"用途：体・手・顔の清拭。入浴できない期間の基本的な清潔管理", location:"📍各部屋・収納スペース", priority:"required", phase:1, flags:"all", qty:"20パック以上", pack:true},
+      {name:"ドライシャンプー", sub:"用途：断水時の頭皮ケア。においやかゆみを防ぎ精神的ストレスを軽減", location:"📍洗面所", priority:"recommend", phase:2, flags:"all", qty:"3本"},
+      {name:"水のいらない歯磨きジェル・口腔ケアスプレー", sub:"用途：断水時の口腔ケア。口腔内の細菌増殖は肺炎の原因になるため重要。高齢者は特に注意", location:"📍洗面所・避難リュック", priority:"recommend", phase:1, flags:"all", qty:"2本", pack:true},
+      {name:"洗口液（マウスウォッシュ）", sub:"用途：水なしでの口腔清潔維持。水のいらない歯磨きと組み合わせて使用", location:"📍洗面所", priority:"recommend", phase:2, flags:"all", qty:"2本"},
+      {name:"石鹸（固形・液体）", sub:"用途：手洗いによる感染症予防。基本中の基本。水が少なくても泡立てて拭き取る使い方も", location:"📍洗面所・各部屋", priority:"required", phase:1, flags:"all", qty:"5個以上"},
+      {name:"ボディシート・除菌シート", sub:"用途：入浴できない期間の体臭・汗の管理。精神的ストレス軽減にも", location:"📍洗面所・収納スペース", priority:"recommend", phase:2, flags:"all", qty:"10パック以上"},
+      {name:"ゴミ袋（大・中・小）", sub:"用途：ゴミ処理・荷物の防水・簡易雨具・トイレ袋の代用など多用途。45Lを中心に大量備蓄", location:"📍収納スペース・キッチン", priority:"required", phase:1, flags:"all", qty:"大量"},
+      {name:"レジ袋・紙袋", sub:"用途：トイレの汚物包み・食器の代わり・荷物の一時入れ・防寒（足を入れると保温に）など多用途。わざわざ買わず普段から捨てずにストック", location:"📍キッチン収納", priority:"recommend", phase:1, flags:"all", qty:"大量ストック"},
+      {name:"ペット用トイレシート", sub:"用途：ペットの排泄処理。被災直後から必要。多めに備蓄", location:"📍ペット用品収納", priority:"required", phase:1, flags:["pet"], qty:"大量"},
+    ]
+  },
+  {
+    id:"safety", icon:"🪖", title:"身の安全・避難",
+    items:[
+      {name:"防災ヘルメット（なければ防災頭巾）", sub:"用途：地震直後の落下物・崩壊から頭を守る。最優先品。ヘルメット推奨、ない場合は防災頭巾でも可。枕元に常備", location:"📍枕元", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"室内用スリッパ・厚底サンダル（枕元常備）", sub:"用途：就寝中の地震でガラスが散乱した床を裸足で歩かないための必需品。枕元に必ず置く習慣を", location:"📍枕元", priority:"required", phase:1, flags:"all", qty:"人数分"},
+      {name:"ほうき・ちりとり", sub:"用途：地震後に割れたガラス・瓦礫の清掃。掃除機は停電時に使えない。玄関付近に常備", location:"📍玄関付近", priority:"required", phase:1, flags:"all", qty:"1セット"},
+      {name:"軍手・皮手袋（厚手）", sub:"用途：ガラス・瓦礫の撤去。薄い軍手は貫通するため、厚手の皮手袋が理想", location:"📍枕元・避難リュック", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"安全靴・厚底スニーカー", sub:"用途：瓦礫・ガラスの踏み抜き防止。長靴とは用途が異なる（長靴は浸水対処）。ガラスの上を歩ける靴が必要", location:"📍玄関・枕元", priority:"required", phase:1, flags:"all", qty:"人数分"},
+      {name:"長靴", sub:"用途：浸水した道を歩く・泥だらけの瓦礫道・雨天避難。水害リスクの有無に関わらず雨が降る可能性もあるため全員備蓄推奨", location:"📍玄関・収納スペース", priority:"recommend", phase:1, flags:"all", qty:"人数分"},
+      {name:"ホイッスル（笛）", sub:"用途：瓦礫に埋まった際・声が出ない状況での救助要請。声より遠くまで届く。カバンの外側に付けておくと緊急時に取り出しやすい", location:"📍枕元・普段使いのバッグ", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"防犯ブザー", sub:"用途：避難所での性被害・犯罪抑止。瓦礫に埋まった時の救助要請（ホイッスルと用途が重なるが音量が違う）。性別問わず全員が持つべき", location:"📍普段使いのバッグ・枕元", priority:"recommend", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"ガラス飛散防止フィルム（窓用）", sub:"用途：地震で割れた窓ガラスの室内飛散を防ぐ。怪我の予防に非常に効果的。事前施工が必要→事前対処リストも参照", location:"📍全窓に施工済みが理想", priority:"required", phase:1, flags:"all", qty:"全窓分"},
+      {name:"バール・ハンマー", sub:"用途：地震で歪んだ扉の強制開扉・建物崩壊時の脱出補助。マンションでも扉が歪んで開かなくなるケースは多い", location:"📍玄関付近", priority:"recommend", phase:1, flags:"all", qty:"1本"},
+      {name:"ロープ（5〜10m）", sub:"用途：避難・救助・荷物の固定・応急修理に多用途", location:"📍収納スペース・避難リュック", priority:"recommend", phase:2, flags:"all", qty:"1本", pack:true},
+      {name:"避難リュック（72時間セット）", sub:"用途：緊急避難時の持ち出し品一式。玄関に常備。中身を年1回見直す", location:"📍玄関", priority:"required", phase:1, flags:"all", qty:"人数分"},
+      {name:"車用緊急脱出ハンマー（シートカッター付き）", sub:"用途：車ごと水没・衝突時の窓ガラス破壊・シートベルト切断。運転席から手が届く位置に固定", location:"📍運転席付近", priority:"required", phase:1, flags:["car"], qty:"1個"},
+      {name:"ライフジャケット（浮力体）", sub:"用途：水害時の水没・流水からの保護。津波・洪水リスクのある地域では必携", location:"📍玄関・収納スペース", priority:"required", phase:1, flags:["coast"], qty:"人数分", pack:true},
+      {name:"防水袋（ドライバッグ）", sub:"用途：重要書類・電子機器・食料の防水保護。水害時の避難時だけでなく、雨天時の外出・保管にも有用", location:"📍収納スペース・避難リュック", priority:"recommend", phase:1, flags:"all", qty:"2〜3個", pack:true},
+      {name:"土のう袋", sub:"用途：自宅への浸水を防ぐ応急的な水止め。低地・浸水リスクエリアの基本対策", location:"📍玄関・収納スペース", priority:"required", phase:1, flags:["coast","mansion_low"], qty:"20袋以上"},
+      {name:"登山用ストック・杖", sub:"用途：瓦礫の多い道での歩行補助・高齢者の移動補助", location:"📍収納スペース", priority:"recommend", phase:2, flags:["elder","mountain"], qty:"人数分"},
+    ]
+  },
+  {
+    id:"info", icon:"📡", title:"情報・通信",
+    items:[
+      {name:"AM/FMラジオ（電池・手回し兼用）", sub:"用途：停電時の情報収集の最重要手段。NHKが基本。ハンドクランク充電ラジオと兼用できるタイプが最も効率的", location:"📍リビング・収納スペース", priority:"required", phase:1, flags:"all", qty:"1台"},
+      {name:"ハザードマップ（紙印刷版）", sub:"用途：自宅・避難場所・避難ルートの浸水・崩壊リスク確認。自治体サイトからDL・印刷して防水袋に保管", location:"📍避難リュック", priority:"required", phase:1, flags:"all", qty:"1部", pack:true},
+      {name:"緊急連絡先リスト（紙）", sub:"用途：スマホが使えない時の家族・親戚・かかりつけ医・自治会への連絡。暗記も重要", location:"📍避難リュック・財布", priority:"required", phase:1, flags:"all", qty:"1部", pack:true},
+      {name:"スマホにオフライン地図をDL（Google Maps等）", sub:"用途：通信障害時のナビゲーション。車のカーナビよりスマホオフライン地図が現実的。避難ルートを事前にDL", location:"📍スマホ設定済み？", priority:"required", phase:1, flags:"all", qty:"設定済み？"},
+      {name:"NHKニュースアプリ・Yahoo!防災アプリ", sub:"用途：プッシュ通知で緊急情報を受信。事前ダウンロード・通知設定が必須", location:"📍スマホ設定済み？", priority:"required", phase:1, flags:"all", qty:"設定済み？"},
+      {name:"重要書類の写真撮影・クラウド保存", sub:"用途：紛失・焼失時のバックアップ。通帳・権利証・保険証・マイナンバーをスキャンしてクラウドに保存", location:"📍クラウド保存済み？", priority:"required", phase:1, flags:"all", qty:"実施済み？"},
+      {name:"携帯型Wi-Fiルーター（予備SIM）", sub:"用途：キャリア障害時の代替通信回線。異なるキャリアのSIMが理想的", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"1台"},
+      {name:"トランシーバー（特定小電力無線）", sub:"用途：スマホ・回線不通時の家族間近距離通信。2台セットで使用", location:"📍収納スペース", priority:"nice", phase:2, flags:"all", qty:"2台"},
+    ]
+  },
+  {
+    id:"warmth", icon:"🧣", title:"防寒・防暑・快適",
+    items:[
+      {name:"アルミ製保温ブランケット（エマージェンシー）", sub:"用途：体温低下防止・防寒。コンパクトで避難リュックに必携。体温を反射して保温する仕組み", location:"📍避難リュック", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"寝袋（シュラフ）", sub:"用途：避難所・車中泊・停電時の就寝。0〜10℃対応タイプ推奨。春秋以外は厚手が安心", location:"📍収納スペース", priority:"required", phase:1, flags:"all", qty:"人数分"},
+      {name:"毛布", sub:"用途：防寒・床への敷物・負傷者の保温・目隠し。重ねて使える。夏場でも避難所は冷えることがある", location:"📍収納スペース", priority:"required", phase:1, flags:"all", qty:"人数分×2"},
+      {name:"カイロ（貼るタイプ・貼らないタイプ）", sub:"用途：手軽な防寒・体温維持。応急処置での局所加温にも。湯たんぽと使い分けで消費量を節約", location:"📍収納スペース・避難リュック", priority:"recommend", phase:1, flags:"all", qty:"50個以上", pack:true},
+      {name:"防寒着・フリースジャケット", sub:"用途：室内外での体温維持。避難袋の中に1着追加しておく", location:"📍避難リュック・収納スペース", priority:"recommend", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"レインコート・ポンチョ", sub:"用途：雨天避難・防寒・簡易防風。傘より両手が使えるポンチョ推奨", location:"📍玄関・避難リュック", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"替えの下着・靴下（3日分）", sub:"用途：衛生管理の基本。洗えない期間の清潔維持", location:"📍収納スペース・避難リュック", priority:"required", phase:1, flags:"all", qty:"3組/人", pack:true},
+      {name:"夏用冷感グッズ（瞬間冷却パック・冷感タオル）", sub:"用途：夏の被災時の熱中症予防。停電でエアコンが使えない環境での体温管理は死活問題", location:"📍収納スペース", priority:"recommend", phase:1, flags:"all", qty:"適量"},
+      {name:"充電式・乾電池式扇風機", sub:"用途：夏場の停電時における熱中症対策。首掛け型は手軽で効果的", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"1〜2台"},
+      {name:"帽子・サングラス", sub:"用途：長時間の屋外作業・避難時の日差し・粉塵対策", location:"📍収納スペース・避難リュック", priority:"recommend", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"ペット用毛布・ケージカバー", sub:"用途：ペットの体温管理。動物は体温調節が難しいため防寒は人間と同様に重要", location:"📍ペット用品収納", priority:"recommend", phase:1, flags:["pet"], qty:"人数分"},
+    ]
+  },
+  {
+    id:"mental", icon:"😊", title:"精神的健康・コミュニケーション",
+    items:[
+      {name:"子ども向けおもちゃ・絵本（お気に入りのもの）", sub:"用途：子どもの不安・ストレスを和らげる。見知らぬ環境での情緒安定に効果的。お気に入りのものが最も効果的", location:"📍避難リュック", priority:"required", phase:1, flags:["baby","kids"], qty:"数点", pack:true},
+      {name:"ぬいぐるみ・安心グッズ", sub:"用途：子どもの愛着対象が精神的安定に非常に有効。避難リュックに1点は必ず入れる", location:"📍枕元・避難リュック", priority:"required", phase:1, flags:["baby","kids"], qty:"1点", pack:true},
+      {name:"ボードゲーム・トランプ・カード", sub:"用途：避難所での長時間の暇つぶし・コミュニティ形成。人との交流が精神的回復を助ける", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"1〜2点"},
+      {name:"お気に入りのお菓子・飲み物", sub:"用途：精神的安定剤。日常の味・香りが強いストレス環境での心の支えになる", location:"📍収納スペース・避難リュック", priority:"recommend", phase:1, flags:"all", qty:"適量", pack:true},
+      {name:"ノート・鉛筆・ペン", sub:"用途：情報記録・伝言メモ・子どもの遊び・精神的整理。防水袋に入れて保管", location:"📍避難リュック", priority:"recommend", phase:1, flags:"all", qty:"2セット", pack:true},
+      {name:"家族写真（プリント版）", sub:"用途：精神的な支え。避難所での身元確認や伝言板への掲示にもなる", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"数枚", pack:true},
+      {name:"耳栓・アイマスク", sub:"用途：避難所での騒音・光から睡眠を守る。睡眠の質は免疫力・判断力に直結", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"人数分", pack:true},
+      {name:"ペット用おもちゃ・ケアグッズ", sub:"用途：ストレスを受けやすいペットの精神的ケア。環境変化によるストレスは体調不良の原因になる", location:"📍ペット用品収納", priority:"recommend", phase:2, flags:["pet"], qty:"数点"},
+    ]
+  },
+  {
+    id:"documents", icon:"📄", title:"重要書類・お金",
+    items:[
+      {name:"現金（小銭含む）", sub:"用途：停電でカード・電子マネーが使えない時の決済手段。1,000円札・100円玉中心に。5万円以上を目安", location:"📍避難リュック・分散保管", priority:"required", phase:1, flags:"all", qty:"5万円以上", pack:true},
+      {name:"通帳・キャッシュカードのコピー", sub:"用途：口座番号の確認・窓口での本人確認補助。原本は持ち出し、コピーは家とクラウドに", location:"📍避難リュック", priority:"required", phase:1, flags:"all", qty:"1部", pack:true},
+      {name:"保険証・マイナンバーカードのコピー", sub:"用途：避難先の医療機関での受診・各種手続きの身分証明", location:"📍避難リュック", priority:"required", phase:1, flags:"all", qty:"1部", pack:true},
+      {name:"不動産・住居関連の重要書類（権利証・賃貸契約書等）", sub:"用途：住居の権利確認・罹災証明申請・保険請求。家を失った際・再建時に必要", location:"📍避難リュック・防水袋", priority:"recommend", phase:2, flags:"all", qty:"1部", pack:true},
+      {name:"印鑑（実印・認印）", sub:"用途：罹災証明書の申請・各種行政手続き・保険請求", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"2本", pack:true},
+      {name:"緊急連絡先カード（財布携帯用）", sub:"用途：スマホなしで家族・親戚に連絡するための手段。名刺サイズに印刷して財布に常時携帯", location:"📍財布・各人のバッグ", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"パスポート（コピー）", sub:"用途：外国人家族がいる場合・海外からの支援受け取りの際などに身分証明として使用", location:"📍避難リュック", priority:"nice", phase:3, flags:"all", qty:"1部", pack:true},
+    ]
+  },
+  {
+    id:"tools", icon:"🔧", title:"工具・多目的ツール",
+    items:[
+      {name:"多機能ナイフ（十徳ナイフ）", sub:"用途：缶切り・ドライバー・はさみ・ナイフを1本で代替。スイスアーミー等", location:"📍避難リュック", priority:"recommend", phase:1, flags:"all", qty:"1本", pack:true},
+      {name:"ガムテープ（布・ビニール）", sub:"用途：窓の養生・割れたガラスの応急補修・梱包・骨折固定の補助など多用途。防災の万能品", location:"📍収納スペース・避難リュック", priority:"required", phase:1, flags:"all", qty:"3〜5個", pack:true},
+      {name:"養生テープ", sub:"用途：剥がせるタイプ。ガラスへの貼り付け・目印・伝言用など。ガムテープとセットで備蓄", location:"📍収納スペース", priority:"recommend", phase:1, flags:"all", qty:"3個"},
+      {name:"マジックペン（太・細）", sub:"用途：避難所での氏名記入・壁への伝言・荷物の識別", location:"📍避難リュック", priority:"recommend", phase:1, flags:"all", qty:"数本", pack:true},
+      {name:"ブルーシート（大・中）", sub:"用途：①屋根・外壁の雨漏り応急修理（戸建て）②屋外での雨避けスペース作り③荷物・家財の保護④避難所の仕切り・床敷き。5m×5mが汎用的", location:"📍収納スペース・屋外倉庫", priority:"recommend", phase:2, flags:"all", qty:"2〜3枚"},
+      {name:"スコップ・ショベル（折りたたみ）", sub:"用途：土砂災害後の撤去・瓦礫除去・雪かき。土砂リスクがない地域でも瓦礫処理に使える場面がある。折りたたみ式が収納しやすい", location:"📍収納スペース・車内", priority:"recommend", phase:2, flags:"all", qty:"1〜2本"},
+      {name:"防水袋・ジップロック（各サイズ）", sub:"用途：重要書類・食品・電子機器の防水保護。多用途で大量備蓄推奨", location:"📍収納スペース・各場所", priority:"required", phase:1, flags:"all", qty:"大量", pack:true},
+      {name:"自転車（折りたたみ不問）", sub:"用途：ガス欠・渋滞・公共交通停止時の代替移動手段。徒歩より格段に行動範囲が広がる", location:"📍駐輪場・玄関", priority:"nice", phase:3, flags:"all", qty:"検討"},
+      {name:"車載工具・ジャッキ・スペアタイヤ", sub:"用途：タイヤのパンク修理・緊急時の自己救助。積んであるか定期確認を", location:"📍車内（トランク）", priority:"recommend", phase:1, flags:["car"], qty:"確認"},
+      {name:"ガソリン携行缶＋燃料", sub:"用途：ガス欠時の緊急補給。10L以上備蓄。専用の金属製携行缶を使用（プラスチック不可）", location:"📍屋外・ガレージ（直射日光を避ける）", priority:"recommend", phase:1, flags:["car"], qty:"10L以上"},
+    ]
+  },
+];
+
+// 事前対処リスト
+const PREACTIONS = [
+  {name:"ガラス飛散防止フィルムを全窓に施工", sub:"地震後の室内ガラス飛散による怪我を大幅に減らせる最も費用対効果の高い対策の一つ。賃貸は管理会社に要確認", target:"全員"},
+  {name:"家具・家電の転倒防止固定（L字金具・突っ張り棒）", sub:"地震による家具の倒壊は怪我・脱出阻害・火災の原因になる。特に寝室・玄関周りを優先して固定", target:"全員"},
+  {name:"冷蔵庫・食器棚への扉ロック設置", sub:"強い揺れで扉が開いて中身が飛び出す。100均の扉ロックでも効果あり", target:"全員"},
+  {name:"自宅のハザードマップを確認（浸水・土砂・津波）", sub:"国土交通省「重ねるハザードマップ」で自宅の各リスクを確認。リスクの種類によって避難行動が変わる", target:"全員"},
+  {name:"避難場所・避難所の場所を確認し家族全員で共有", sub:"自治体の避難場所・広域避難場所・緊急避難場所の違いを把握。複数パターンを確認しておく", target:"全員"},
+  {name:"家族の集合場所・連絡方法を事前に決めておく", sub:"「誰が・どこへ・どのルートで」を具体的に決めて全員が暗記。171災害伝言ダイヤルの使い方も練習", target:"全員"},
+  {name:"在宅避難か避難所避難かの判断基準を決める", sub:"建物の被害状況・ライフライン状況・家族構成によって判断。高層マンションは「在宅避難」が原則のケースも多い", target:"全員"},
+  {name:"徒歩帰宅ルートを2〜3パターン確認し紙地図を作成", sub:"公共交通停止時に職場・学校から自宅まで徒歩で帰る想定。低地・アンダーパス・崖下を避けるルートを選定", target:"全員"},
+  {name:"ガソリンは残量半分になったら給油を習慣化", sub:"災害直後は給油渋滞・品切れが発生。普段から8分の1以下にしない習慣が命を守る", target:"車あり"},
+  {name:"車の避難路確認（水害時に低地・地下を通らないルート）", sub:"水害時にアンダーパス・低地ルートを通ると車ごと水没するリスクがある。高台ルートを事前に確認", target:"車あり"},
+  {name:"耐震診断・耐震補強の確認", sub:"1981年以前建築（旧耐震基準）の建物は特に要確認。無料耐震診断を実施している自治体が多い", target:"戸建て"},
+  {name:"屋根・外壁の定期点検（年1回）", sub:"地震後の雨漏り対策。ブルーシートでの応急修理方法も事前に確認しておく", target:"戸建て"},
+  {name:"停電時のオートロック解除・出入り方法を確認", sub:"マンションのオートロックは停電時に開いたまま or 閉まったまま、どちらかを事前に管理組合に確認", target:"マンション"},
+  {name:"管理組合・自治会の防災計画を把握する", sub:"集合住宅は個人対策に限界がある。共助体制・備蓄場所・役割分担を把握", target:"マンション"},
+  {name:"近隣住民と顔見知りになっておく", sub:"災害時の助け合いは平時の人間関係から生まれる。特に高齢者・一人暮らしの隣人を把握しておく", target:"全員"},
+  {name:"かかりつけ医・処方薬の情報をまとめておく", sub:"お薬手帳のコピー・主治医の連絡先・薬の名称・用量を紙にまとめて避難リュックに", target:"高齢者同居・持病あり"},
+  {name:"重要書類のスキャン・クラウド保存", sub:"通帳・保険証・権利証・マイナンバー・お薬手帳をスキャン。Googleドライブ等に保存", target:"全員"},
+  {name:"171災害伝言ダイヤルの使い方を家族全員で練習", sub:"毎年1/17・3/11・9/1等に体験利用できる。いざという時に使えるよう練習を", target:"全員"},
+  {name:"SNS・緊急連絡先リストを紙に印刷しておく", sub:"スマホが使えない・壊れた時でも家族・知人・行政機関に連絡できるよう紙のリストを作成", target:"全員"},
+  {name:"現金の小銭を十分に確保しておく", sub:"停電時は電子決済・ATMが使えない。自動販売機・公衆電話のために小銭（100円・10円）を意識的にストック", target:"全員"},
+];
+
+// 外出時リスト
+const OUTING_ITEMS = [
+  {name:"現金（小銭含む）", detail:"1,000円札×5枚＋100円玉×10枚。自販機・公衆電話を想定", weight:"〜50g"},
+  {name:"モバイルバッテリー＋充電ケーブル", detail:"10,000mAh以上推奨", weight:"〜200g"},
+  {name:"携帯食（カロリーメイト等）", detail:"2本入り×2箱", weight:"〜100g"},
+  {name:"折りたたみウォーターボトル", detail:"給水所・水道で補充", weight:"〜30g"},
+  {name:"N95マスク（個包装）", detail:"2〜3枚", weight:"〜20g"},
+  {name:"使い捨て手袋（ニトリル）", detail:"3双", weight:"〜10g"},
+  {name:"絆創膏・小型救急セット", detail:"10枚以上", weight:"〜30g"},
+  {name:"常備薬（処方薬含む）", detail:"3〜5日分", weight:"〜30g"},
+  {name:"ホイッスル（笛）", detail:"バッグの外に付けておく", weight:"〜10g"},
+  {name:"アルミブランケット", detail:"折りたたみコンパクト型", weight:"〜50g"},
+  {name:"ヘッドライト or キーホルダーライト", detail:"夜間移動・停電時", weight:"〜30g"},
+  {name:"軽量レインポンチョ", detail:"傘より両手が使える", weight:"〜60g"},
+  {name:"紙の地図（職場〜自宅ルート）", detail:"A4印刷・ラミネート", weight:"〜10g"},
+  {name:"緊急連絡先メモ（カード）", detail:"財布にも1枚", weight:"〜5g"},
+  {name:"ティッシュ・ウェットティッシュ", detail:"各1パック", weight:"〜40g"},
+  {name:"生理用品（スリム型）", detail:"3〜5枚", weight:"〜30g"},
+  {name:"簡易トイレ袋（2枚）", detail:"個包装コンパクト型", weight:"〜20g"},
+];
+
+// 車載リスト
+const CAR_ITEMS = [
+  {name:"車用緊急脱出ハンマー", detail:"運転席から手が届く位置に固定。窓破壊＋シートベルト切断"},
+  {name:"飲料水（500ml×4本）", detail:"夏場は熱に注意・定期交換"},
+  {name:"非常食（カロリーメイト等）", detail:"熱に強いものを選ぶ"},
+  {name:"毛布・アルミブランケット", detail:"車中泊・防寒に"},
+  {name:"救急セット（絆創膏・消毒）", detail:"小型でOK"},
+  {name:"懐中電灯・ヘッドライト", detail:"乾電池式推奨"},
+  {name:"軍手・安全手袋", detail:"事故・瓦礫対処に"},
+  {name:"レインポンチョ", detail:"車外での作業・移動に"},
+  {name:"長靴（折りたたみ）", detail:"浸水道路・瓦礫道に"},
+  {name:"ホイッスル", detail:"車内閉じ込め時の救助要請"},
+  {name:"モバイルバッテリー＋ケーブル", detail:"車のシガーソケットでも充電"},
+  {name:"現金（小銭含む）", detail:"1〜2万円程度"},
+  {name:"紙の地図（広域）", detail:"通信障害時のナビ代替"},
+  {name:"ガムテープ・養生テープ", detail:"応急修理・窓の補修に"},
+  {name:"タイヤ修理キット or スペアタイヤ", detail:"積んであるか確認"},
+  {name:"ジャンプスターター（バッテリー充電器）", detail:"バッテリー上がり時の自己救助"},
+  {name:"消火器（車載用）", detail:"車両火災時の初期消火"},
+  {name:"簡易トイレ袋", detail:"渋滞・道路閉鎖時に"},
+];
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+function lsGet(key, fallback) { try { return JSON.parse(localStorage.getItem(key) || fallback); } catch(e) { return JSON.parse(fallback); } }
+function lsSet(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {} }
+
+let settings = {};
+let checkedItems  = lsGet('ec3_checked', '{}');
+let quantities    = lsGet('ec3_qty',     '{}');
+let outingChecked = lsGet('ec3_outing',  '{}');
+let carChecked    = lsGet('ec3_car',     '{}');
+let preChecked    = lsGet('ec3_pre',     '{}');
+let activePhase   = 'all';
+let activePackFilter = false;
+let activePreFilter  = 'all';
+let activeOutingFilter = 'all';
+let activeCarFilter  = 'all';
+let currentView   = 'home';
+
+// ═══════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════
+function isRelevant(flags) {
+  if (flags === 'all' || !flags || flags.length === 0) return true;
+  const ak = Object.keys(settings).filter(k => settings[k]);
+  if (ak.length === 0) return true;
+  return flags.some(f => ak.includes(f));
+}
+function matchPhase(item) { return activePhase === 'all' || String(item.phase) === String(activePhase); }
+function matchSearch(item) {
+  const q = (document.getElementById('search-input')?.value || '').trim().toLowerCase();
+  return !q || item.name.toLowerCase().includes(q) || (item.sub||'').toLowerCase().includes(q);
+}
+function matchPriority(item) {
+  const f = document.getElementById('priority-filter')?.value || 'all';
+  return f === 'all' || f.split(',').includes(item.priority);
+}
+function matchPack(item) { return !activePackFilter || !!item.pack; }
+function badge(p) {
+  if (p==='required')  return '<span class="badge badge-r">🔴 必須</span>';
+  if (p==='recommend') return '<span class="badge badge-y">🟡 推奨</span>';
+  return '<span class="badge badge-b">🔵 あると安心</span>';
+}
+function phaseBadge(p) { return `<span class="phase-badge phase-${p}">P${p}</span>`; }
+function saveState() {
+  lsSet('ec3_checked', checkedItems);
+  lsSet('ec3_qty',     quantities);
+  lsSet('ec3_outing',  outingChecked);
+  lsSet('ec3_car',     carChecked);
+  lsSet('ec3_pre',     preChecked);
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER: 備蓄品
+// ═══════════════════════════════════════════════════
+function renderSections() {
+  const container = document.getElementById('sections-container');
+  const navEl     = document.getElementById('cat-nav');
+  container.innerHTML = '';
+  navEl.innerHTML = '';
+
+  let totC=0, totR=0, totV=0, reqR=0;
+
+  CATEGORIES.forEach(cat => {
+    const visible = cat.items.filter(i => matchSearch(i) && matchPriority(i) && matchPhase(i) && matchPack(i));
+    if (!visible.length) return;
+
+    let catC=0, catT=0, rows='';
+    visible.forEach(item => {
+      const id = cat.id+'_'+item.name;
+      const rel = isRelevant(item.flags);
+      const chk = !!checkedItems[id];
+      const qty = quantities[id] || '';
+      if (rel) { catT++; totV++; if(chk){catC++;totC++;}else{totR++;if(item.priority==='required')reqR++;} }
+      const rc = !rel ? 'dimmed-item' : (chk ? 'checked-item' : '');
+      const packIcon = item.pack ? '<span class="item-pack-badge" title="避難リュックに入れる">🎒</span>' : '';
+      rows += `<tr class="${rc}" id="row-${CSS.escape(id)}">
+        <td class="check-cell"><input type="checkbox" class="item-check" ${chk?'checked':''} onchange="toggleCheck('${id}')"></td>
+        <td>
+          <div class="item-name ${chk?'checked-label':''}">${item.name}${packIcon}</div>
+          <div class="item-sub">${item.sub||''}</div>
+          ${item.location?`<div class="item-location">${item.location}</div>`:''}
+        </td>
+        <td>${badge(item.priority)}</td>
+        <td>${phaseBadge(item.phase)}</td>
+        <td class="qty-cell"><input class="qty-input" type="text" value="${qty||item.qty||''}" onchange="saveQty('${id}',this.value)" placeholder="${item.qty||''}"></td>
+      </tr>`;
+    });
+
+    const pct = catT>0 ? Math.round(catC/catT*100) : 0;
+    const sec = document.createElement('div');
+    sec.className='section'; sec.id='sec-'+cat.id;
+    sec.innerHTML=`
+      <div class="section-header" onclick="toggleSection('${cat.id}')">
+        <span class="section-icon">${cat.icon}</span>
+        <span class="section-title">${cat.title}</span>
+        <span class="section-stats">${catC}/${catT} (${pct}%)</span>
+        <span class="section-toggle">▼</span>
+      </div>
+      <div class="section-body">
+        <table class="item-table">
+          <thead><tr>
+            <th style="width:34px">✓</th>
+            <th>品目・用途・保管場所</th>
+            <th style="width:90px">優先度</th>
+            <th style="width:44px">P</th>
+            <th style="width:80px">数量目安</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+    container.appendChild(sec);
+
+    const nav = document.createElement('div');
+    nav.className='cat-nav-item';
+    nav.innerHTML=`${cat.icon} ${cat.title} <span class="cat-count">${catC}/${catT}</span>`;
+    nav.onclick=()=>document.getElementById('sec-'+cat.id)?.scrollIntoView({behavior:'smooth',block:'start'});
+    navEl.appendChild(nav);
+  });
+
+  document.getElementById('stat-checked').textContent = totC;
+  document.getElementById('stat-remain').textContent  = totR;
+  document.getElementById('stat-total').textContent   = totV;
+  document.getElementById('stat-req-remain').textContent = reqR;
+  const pct = totV>0 ? Math.round(totC/totV*100) : 0;
+  document.getElementById('topbar-stat').textContent = `${totC} / ${totV} 入手済み`;
+  document.getElementById('progress-bar').style.width = pct+'%';
+  document.getElementById('summary-progress-fill').style.width = pct+'%';
+  document.getElementById('summary-progress-label').textContent = `${totC} / ${totV} 件入手済み`;
+  saveState();
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER: 事前対処
+// ═══════════════════════════════════════════════════
+function renderPreaction() {
+  const list = document.getElementById('preaction-list');
+  let done=0, total=PREACTIONS.length;
+  let html='';
+  PREACTIONS.forEach((item,i) => {
+    const id='pre_'+i;
+    const chk=!!preChecked[id];
+    if(chk) done++;
+    const show = activePreFilter==='all' || (activePreFilter==='done'&&chk) || (activePreFilter==='remain'&&!chk);
+    if(!show) return;
+    html+=`<div class="preaction-item ${chk?'preaction-done':''}">
+      <input type="checkbox" class="preaction-check" ${chk?'checked':''} onchange="togglePre('${id}',this.checked)">
+      <div class="preaction-body">
+        <div class="preaction-name ${chk?'checked-label':''}">${item.name}</div>
+        <div class="preaction-sub">${item.sub}</div>
+        <div class="preaction-target">📌 対象：${item.target}</div>
+      </div>
+    </div>`;
+  });
+  list.innerHTML = html || '<div style="padding:16px;color:var(--gray4);font-size:12px;">該当する項目がありません</div>';
+  const remain = total - done;
+  const pct = total>0 ? Math.round(done/total*100) : 0;
+  document.getElementById('pre-stat-done').textContent  = done;
+  document.getElementById('pre-stat-remain').textContent= remain;
+  document.getElementById('pre-stat-total').textContent = total;
+  document.getElementById('pre-progress-fill').style.width = pct+'%';
+  document.getElementById('pre-progress-label').textContent = `${done} / ${total} 件実施済み`;
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER: 外出時リスト
+// ═══════════════════════════════════════════════════
+function renderOutingList() {
+  const tbody = document.getElementById('outing-tbody');
+  let done=0, total=OUTING_ITEMS.length;
+  let html='';
+  OUTING_ITEMS.forEach((item,i) => {
+    const id='outing_'+i;
+    const chk=!!outingChecked[id];
+    if(chk) done++;
+    const show = activeOutingFilter==='all' || (activeOutingFilter==='done'&&chk) || (activeOutingFilter==='remain'&&!chk);
+    html+=`<tr class="${chk?'outing-checked':''}" style="${show?'':'display:none'}">
+      <td class="check-cell"><input type="checkbox" class="item-check" ${chk?'checked':''} onchange="toggleOuting('${id}',this.checked)"></td>
+      <td>
+        <div class="outing-name ${chk?'checked-label':''}">${item.name}</div>
+        <div class="outing-detail">${item.detail}</div>
+      </td>
+      <td class="weight-badge">${item.weight||''}</td>
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+  updateOutingStats(done, total);
+}
+
+function updateOutingStats(done, total) {
+  const remain = total - done;
+  const pct = total>0 ? Math.round(done/total*100) : 0;
+  document.getElementById('outing-stat-done').textContent   = done;
+  document.getElementById('outing-stat-remain').textContent = remain;
+  document.getElementById('outing-stat-total').textContent  = total;
+  document.getElementById('outing-progress-fill').style.width = pct+'%';
+  document.getElementById('outing-progress-label').textContent = `${done} / ${total} 件入手済み`;
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER: 車載リスト
+// ═══════════════════════════════════════════════════
+function renderCarList() {
+  const tbody = document.getElementById('car-tbody');
+  let done=0, total=CAR_ITEMS.length;
+  let html='';
+  CAR_ITEMS.forEach((item,i) => {
+    const id='car_'+i;
+    const chk=!!carChecked[id];
+    if(chk) done++;
+    const show = activeCarFilter==='all' || (activeCarFilter==='done'&&chk) || (activeCarFilter==='remain'&&!chk);
+    html+=`<tr class="${chk?'outing-checked':''}" style="${show?'':'display:none'}">
+      <td class="check-cell"><input type="checkbox" class="item-check" ${chk?'checked':''} onchange="toggleCar('${id}',this.checked)"></td>
+      <td>
+        <div class="outing-name ${chk?'checked-label':''}">${item.name}</div>
+        <div class="outing-detail">${item.detail}</div>
+      </td>
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+  const remain = total - done;
+  const pct = total>0 ? Math.round(done/total*100) : 0;
+  document.getElementById('car-stat-done').textContent   = done;
+  document.getElementById('car-stat-remain').textContent = remain;
+  document.getElementById('car-stat-total').textContent  = total;
+  document.getElementById('car-progress-fill').style.width = pct+'%';
+  document.getElementById('car-progress-label').textContent = `${done} / ${total} 件入手済み`;
+}
+
+// ═══════════════════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════════════════
+function toggleSetting(btn) {
+  const k=btn.dataset.key;
+  settings[k]=!settings[k];
+  btn.classList.toggle('active',settings[k]);
+  // 住居タイプは排他（1つだけ選べる）
+  const mutex={mansion_high:['mansion_low','house'],mansion_low:['mansion_high','house'],house:['mansion_high','mansion_low']};
+  // 家族構成の世帯人数系は排他
+  const personMutex={solo:['couple','adults3'],couple:['solo','adults3'],adults3:['solo','couple']};
+  const allMutex = {...mutex, ...personMutex};
+  if(settings[k] && allMutex[k]) allMutex[k].forEach(ok=>{
+    settings[ok]=false;
+    document.querySelectorAll(`.toggle-btn[data-key="${ok}"]`).forEach(b=>b.classList.remove('active'));
+  });
+  applyFilters();
+}
+
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const btn = document.getElementById('sidebar-toggle');
+  sb.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function toggleCheck(id) {
+  checkedItems[id]=!checkedItems[id];
+  saveState(); renderSections();
+}
+function saveQty(id,val) { quantities[id]=val; saveState(); }
+function toggleOuting(id,val) { outingChecked[id]=val; saveState(); renderOutingList(); }
+function toggleCar(id,val) { carChecked[id]=val; saveState(); renderCarList(); }
+function togglePre(id,val) { preChecked[id]=val; saveState(); renderPreaction(); }
+function toggleSection(catId) { document.getElementById('sec-'+catId)?.classList.toggle('collapsed'); }
+
+function togglePhase(btn) {
+  document.querySelectorAll('.filter-chip[data-phase]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); activePhase=btn.dataset.phase; renderSections();
+}
+function togglePackFilter(btn) {
+  activePackFilter = !activePackFilter;
+  btn.classList.toggle('active-green', activePackFilter);
+  btn.classList.toggle('active', false);
+  renderSections();
+}
+function togglePreFilter(btn) {
+  document.querySelectorAll('.filter-chip[data-prefilter]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); activePreFilter=btn.dataset.prefilter; renderPreaction();
+}
+function toggleOutingFilter(btn) {
+  document.querySelectorAll('.filter-chip[data-outingfilter]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); activeOutingFilter=btn.dataset.outingfilter; renderOutingList();
+}
+function toggleCarFilter(btn) {
+  document.querySelectorAll('.filter-chip[data-carfilter]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); activeCarFilter=btn.dataset.carfilter; renderCarList();
+}
+function applyFilters() { renderSections(); }
+
+function switchTab(btn) { switchTabById(btn.dataset.view); }
+function switchTabById(view) {
+  currentView=view;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.tab[data-view="${view}"]`)?.classList.add('active');
+  ['home','preaction','outing','car'].forEach(v=>{
+    const el=document.getElementById('view-'+v);
+    if(el) el.style.display=v===view?'':'none';
+  });
+  if(view==='outing')   renderOutingList();
+  if(view==='car')      renderCarList();
+  if(view==='preaction') renderPreaction();
+}
+
+function resetAll() {
+  if(!confirm('すべてのチェックをリセットしますか？')) return;
+  checkedItems={}; quantities={}; outingChecked={}; carChecked={}; preChecked={};
+  ['ec3_checked','ec3_qty','ec3_outing','ec3_car','ec3_pre'].forEach(k=>{ try{localStorage.removeItem(k);}catch(e){} });
+  renderSections(); renderPreaction();
+}
+
+function exportCSV() {
+  let csv='\uFEFF品目名,カテゴリ,優先度,フェーズ,数量目安,入手済み,リュック\n';
+  CATEGORIES.forEach(cat=>{
+    cat.items.forEach(item=>{
+      const id=cat.id+'_'+item.name;
+      const row=[item.name,cat.title,item.priority==='required'?'必須':item.priority==='recommend'?'推奨':'あると安心','P'+item.phase,item.qty,checkedItems[id]?'✓':'',item.pack?'🎒':''];
+      csv+=row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')+'\n';
+    });
+  });
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='非常用品チェックリスト.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// INIT
+document.addEventListener('DOMContentLoaded', function() {
+  renderSections();
+});
+</script>
+
+</body>
+</html>
