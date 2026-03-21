@@ -106,7 +106,7 @@ select.setting-select{width:100%;border:1.5px solid #D5D8DC;border-radius:4px;pa
 .section-header{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;user-select:none;border-bottom:1px solid #D5D8DC;background:#1A252F;}
 .section-header:hover{background:#2C3E50;}
 .section-icon{font-size:16px;}
-.section-title{font-size:13px;font-weight:700;flex:1;color:#FFFFFF;}
+.section-title{font-size:11px;font-weight:700;flex:1;color:#FFFFFF;}
 .section-stats{font-family:‘DM Mono’,monospace;font-size:11px;color:rgba(255,255,255,.6);}
 .section-toggle{font-size:11px;color:rgba(255,255,255,.6);transition:transform .2s;}
 .section.collapsed .section-toggle{transform:rotate(-90deg);}
@@ -114,8 +114,8 @@ select.setting-select{width:100%;border:1.5px solid #D5D8DC;border-radius:4px;pa
 
 .section-header-static{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid #D5D8DC;background:#1A252F;white-space:nowrap;overflow:hidden;}
 .section-header-static .section-icon{font-size:16px;}
-.section-header-static .section-title{font-size:13px;font-weight:700;flex:1;color:#FFFFFF;}
-.subcategory-header{padding:8px 16px;font-size:11px;font-weight:700;color:#FFFFFF;background:#2C3E50;border-bottom:1px solid #34495E;letter-spacing:.04em;}
+.section-header-static .section-title{font-size:11px;font-weight:700;flex:1;color:#FFFFFF;}
+.subcategory-header{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:11px;font-weight:700;color:#FFFFFF;background:#1A252F;border-bottom:1px solid #2C3E50;letter-spacing:.04em;}
 
 /* TABLE */
 .item-table{width:100%;border-collapse:collapse;}
@@ -786,12 +786,6 @@ function renderSections() {
       </div>
       <div class="section-body">
         <table class="item-table">
-          <thead><tr>
-            <th style="width:34px">✓</th>
-            <th>品目・用途・保管場所</th>
-            <th style="width:68px;text-align:right;padding-right:12px">優先度</th>
-            <th style="width:80px">数量目安</th>
-          </tr></thead>
           <tbody>${rows}</tbody>
         </table>
       </div>`;
