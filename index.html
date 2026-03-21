@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>防災用品チェックリスト v8</title>
+<title>防災用品チェックリスト v10</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -32,8 +32,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#F2F3F4;color:#1A252F;font
 .setting-row{margin-bottom:10px;}
 .setting-row label.row-label{display:block;font-size:11px;font-weight:700;color:#2C3E50;margin-bottom:5px;}
 .toggle-group{display:flex;flex-wrap:wrap;gap:4px;}
-.toggle-btn{border:1.5px solid #D5D8DC;background:#F2F3F4;border-radius:4px;padding:5px 10px;font-size:11px;font-family:‘Noto Sans JP’,sans-serif;cursor:pointer;transition:all .15s;color:#2C3E50;user-select:none;line-height:1.4;}
-.toggle-btn:hover{border-color:#2471A3;background:#EBF5FB;color:#2471A3;}
+.toggle-btn{border:1.5px solid #D5D8DC;background:#F2F3F4;border-radius:4px;padding:5px 10px;font-size:11px;font-family:‘Noto Sans JP’,sans-serif;cursor:pointer;color:#2C3E50;user-select:none;line-height:1.4;-webkit-tap-highlight-color:transparent;}
 .toggle-btn.active{background:#2471A3;border-color:#2471A3;color:#FFFFFF;font-weight:700;box-shadow:0 1px 4px rgba(36,113,163,.35);}
 select.setting-select{width:100%;border:1.5px solid #D5D8DC;border-radius:4px;padding:6px 10px;font-family:‘Noto Sans JP’,sans-serif;font-size:12px;background:#F2F3F4;color:#1A252F;cursor:pointer;}
 
@@ -98,8 +97,7 @@ select.setting-select{width:100%;border:1.5px solid #D5D8DC;border-radius:4px;pa
 #search-input:focus,#search-input-pre:focus,#search-input-outing:focus,#search-input-car:focus{outline:none;border-color:#2471A3;}
 .filter-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center;}
 .filter-label{font-size:11px;color:#717D7E;}
-.filter-chip{border:1.5px solid #D5D8DC;background:#FFFFFF;border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:‘Noto Sans JP’,sans-serif;transition:all .15s;color:#2C3E50;}
-.filter-chip:hover{border-color:#2471A3;background:#EBF5FB;color:#2471A3;}
+.filter-chip{border:1.5px solid #D5D8DC;background:#FFFFFF;border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:‘Noto Sans JP’,sans-serif;color:#2C3E50;-webkit-tap-highlight-color:transparent;}
 .filter-chip.active{background:#2471A3;border-color:#2471A3;color:#FFFFFF;font-weight:700;box-shadow:0 1px 4px rgba(36,113,163,.35);}
 .filter-chip.active-green{background:#1E8449;border-color:#1E8449;color:#FFFFFF;font-weight:700;box-shadow:0 1px 4px rgba(30,132,73,.35);}
 /* 優先度チップの非アクティブ時も色づけ */
