@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>防災用品チェックリスト v11</title>
+<title>防災用品チェックリスト v12</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -685,6 +685,7 @@ function lsGet(key, fallback) { try { return JSON.parse(localStorage.getItem(key
 function lsSet(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {} }
 
 let settings = {};
+let collapsedSections = {};
 let checkedItems  = lsGet('ec3_checked', '{}');
 let quantities    = lsGet('ec3_qty',     '{}');
 let outingChecked = lsGet('ec3_outing',  '{}');
@@ -804,6 +805,7 @@ function renderSections() {
         </table>
       </div>`;
     container.appendChild(sec);
+    if (collapsedSections[cat.id]) sec.classList.add('collapsed');
 
     const nav = document.createElement('div');
     nav.className='cat-nav-item';
@@ -958,7 +960,12 @@ function saveQty(id,val) { quantities[id]=val; saveState(); }
 function toggleOuting(id,val) { outingChecked[id]=val; saveState(); renderOutingList(); }
 function toggleCar(id,val) { carChecked[id]=val; saveState(); renderCarList(); }
 function togglePre(id,val) { preChecked[id]=val; saveState(); renderPreaction(); }
-function toggleSection(catId) { document.getElementById('sec-'+catId)?.classList.toggle('collapsed'); }
+function toggleSection(catId) {
+  const el = document.getElementById('sec-'+catId);
+  if (!el) return;
+  el.classList.toggle('collapsed');
+  collapsedSections[catId] = el.classList.contains('collapsed');
+}
 
 function togglePriorityChip(btn) {
   document.querySelectorAll('.filter-chip[data-priority]').forEach(b=>b.classList.remove('active'));
