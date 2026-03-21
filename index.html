@@ -17,15 +17,15 @@
 body{font-family:'Noto Sans JP',sans-serif;background:#F2F3F4;color:#1A252F;font-size:13px;line-height:1.6;}
 
 /* TOP BAR */
-#topbar{background:#1A252F;color:#FFFFFF;padding:12px 24px;display:flex;align-items:center;gap:16px;position:-webkit-sticky;position:sticky;top:0;z-index:1000;box-shadow:0 3px 16px rgba(0,0,0,.5);-webkit-transform:translateZ(0);transform:translateZ(0);}
-#topbar h1{font-size:15px;font-weight:700;letter-spacing:.04em;flex:1;color:#FFFFFF;}
-.pill{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;font-size:11px;font-family:‘DM Mono’,monospace;color:#FFFFFF;}
+#topbar{background:#1A252F;color:#FFFFFF;padding:13px 20px;display:flex;align-items:center;gap:16px;position:-webkit-sticky;position:sticky;top:0;z-index:1000;box-shadow:0 3px 16px rgba(0,0,0,.5);-webkit-transform:translateZ(0);transform:translateZ(0);}
+#topbar h1{font-size:17px;font-weight:800;letter-spacing:.02em;flex:1;color:#FFFFFF;}
+.pill{background:rgba(255,255,255,.15);border-radius:20px;padding:5px 14px;font-size:12px;font-family:‘DM Mono’,monospace;color:#FFFFFF;font-weight:600;}
 
 /* LAYOUT */
 #app{display:flex;min-height:calc(100vh - 48px);}
 
 /* SIDEBAR */
-#sidebar{width:272px;min-width:272px;background:#FFFFFF;border-right:1px solid #D5D8DC;padding:16px 14px;overflow-y:auto;position:sticky;top:48px;height:calc(100vh - 48px);}
+#sidebar{width:272px;min-width:272px;background:#FFFFFF;border-right:1px solid #D5D8DC;overflow-y:auto;position:sticky;top:48px;height:calc(100vh - 48px);}
 #sidebar h2{font-size:10px;font-weight:700;letter-spacing:.12em;color:#717D7E;text-transform:uppercase;margin-bottom:10px;margin-top:18px;padding-bottom:4px;border-bottom:1px solid #D5D8DC;}
 #sidebar h2:first-child{margin-top:0;}
 
@@ -56,6 +56,8 @@ select.setting-select{width:100%;border:1.5px solid #D5D8DC;border-radius:4px;pa
 .cat-nav-item{padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:500;transition:background .12s;display:flex;justify-content:space-between;align-items:center;}
 .cat-nav-item:hover{background:#F2F3F4;}
 .cat-count{font-family:‘DM Mono’,monospace;font-size:10px;color:#717D7E;}
+
+#sidebar-inner{padding:16px 14px;}
 
 /* MAIN */
 #main{flex:1;padding:20px;overflow-y:auto;}
@@ -182,15 +184,16 @@ input[type=checkbox].item-check{width:15px;height:15px;cursor:pointer;accent-col
 #sidebar-toggle.open #sidebar-toggle-arrow{transform:rotate(180deg);}
 
 @media (max-width:700px){
-#app{flex-direction:column;}
+#app{flex-direction:column;min-height:unset;}
 #sidebar-toggle{display:flex;order:1;}
-#sidebar{width:100%;min-width:unset;height:auto;position:static;border-right:none;overflow:hidden;max-height:0;transition:max-height .35s ease;order:2;visibility:hidden;}
+#sidebar{width:100%;min-width:unset;height:auto;position:static;border-right:none;overflow:hidden;max-height:0;transition:max-height .35s ease;order:2;visibility:hidden;padding:0;}
 #sidebar.open{max-height:2000px;border-bottom:1px solid #D5D8DC;visibility:visible;}
 #sidebar-inner{padding:12px 14px 16px;}
 #main{padding:12px 10px;order:3;}
 #tabs .tab{font-size:10px;padding:7px 2px;}
 .item-table th:nth-child(4),.item-table td:nth-child(4){display:none;}
-#topbar h1{font-size:13px;}
+#topbar h1{font-size:15px;}
+.cat-nav-section{display:none;}
 }
 
 @media print{
@@ -260,8 +263,10 @@ body{background:white;font-size:11px;}
     <div class="legend-item"><span style="font-size:13px;">🎒</span><span style="font-size:11px;">避難リュックに入れる品目</span></div>
   </div>
 
+  <div class="cat-nav-section">
   <h2>🔗 カテゴリ</h2>
   <div class="cat-nav" id="cat-nav"></div>
+  </div>
 
   <h2>⚡ アクション</h2>
   <div class="action-btns">
