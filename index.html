@@ -207,9 +207,6 @@ body{background:white;font-size:11px;}
   <div class="setting-row">
     <label class="row-label">家族構成</label>
     <div class="toggle-group">
-      <button class="toggle-btn" data-key="solo" onclick="toggleSetting(this)">一人暮らし</button>
-      <button class="toggle-btn" data-key="couple" onclick="toggleSetting(this)">大人2人</button>
-      <button class="toggle-btn" data-key="adults3" onclick="toggleSetting(this)">大人3人以上</button>
       <button class="toggle-btn" data-key="baby" onclick="toggleSetting(this)">乳幼児あり</button>
       <button class="toggle-btn" data-key="kids" onclick="toggleSetting(this)">小学生以上の子</button>
       <button class="toggle-btn" data-key="elder" onclick="toggleSetting(this)">高齢者同居</button>
@@ -692,9 +689,30 @@ let currentView   = 'home';
 // ═══════════════════════════════════════════════════
 function isRelevant(flags) {
   if (flags === 'all' || !flags || flags.length === 0) return true;
-  const ak = Object.keys(settings).filter(k => settings[k]);
-  if (ak.length === 0) return true;
-  return flags.some(f => ak.includes(f));
+
+  // フラグをカテゴリ別に定義
+  const flagGroups = {
+    family: ['baby','kids','elder','pet','pregnant'],
+    dwelling: ['mansion_high','mansion_low','house'],
+    location: ['coast','mountain'],
+    car: ['car'],
+  };
+
+  // 各グループごとに「そのグループで何か選択されているか」確認
+  // 選択されていないグループのフラグは判定から除外（表示する）
+  for (const [group, keys] of Object.entries(flagGroups)) {
+    const groupActive = keys.filter(k => settings[k]);
+    const itemUsesGroup = flags.some(f => keys.includes(f));
+    if (itemUsesGroup) {
+      // このグループに関するフラグを持つ品目：グループで何も選ばれていなければ表示
+      if (groupActive.length === 0) continue;
+      // グループで何か選ばれていれば、品目のフラグがその中に含まれるか確認
+      if (flags.some(f => groupActive.includes(f))) return true;
+      // このグループに関するフラグを持つが、選択と一致しない → 他グループで救済されなければ非表示
+      return false;
+    }
+  }
+  return true;
 }
 function matchPhase(item) { return true; }
 function matchSearch(item) {
@@ -879,9 +897,7 @@ function toggleSetting(btn) {
   btn.classList.toggle('active',settings[k]);
   // 住居タイプは排他（1つだけ選べる）
   const mutex={mansion_high:['mansion_low','house'],mansion_low:['mansion_high','house'],house:['mansion_high','mansion_low']};
-  // 家族構成の世帯人数系は排他
-  const personMutex={solo:['couple','adults3'],couple:['solo','adults3'],adults3:['solo','couple']};
-  const allMutex = {...mutex, ...personMutex};
+  const allMutex = {...mutex};
   if(settings[k] && allMutex[k]) allMutex[k].forEach(ok=>{
     settings[ok]=false;
     document.querySelectorAll(`.toggle-btn[data-key="${ok}"]`).forEach(b=>b.classList.remove('active'));
