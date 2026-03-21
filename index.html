@@ -61,30 +61,39 @@ select.setting-select{width:100%;border:1.5px solid #D5D8DC;border-radius:4px;pa
 #main{flex:1;padding:20px;overflow-y:auto;}
 
 /* SUMMARY BAR */
-#summary-bar{background:#FFFFFF;border-radius:6px;padding:12px 18px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.10);}
-.summary-top{display:flex;gap:20px;align-items:center;flex-wrap:wrap;}
-.summary-stat{text-align:center;}
-.summary-stat .num{font-size:20px;font-weight:900;font-family:‘DM Mono’,monospace;line-height:1;}
-.summary-stat .lbl{font-size:10px;color:#717D7E;margin-top:1px;}
-.num-green{color:#1E8449;} .num-red{color:#C0392B;} .num-gray{color:#717D7E;}
+#summary-bar{background:#FFFFFF;border-radius:6px;padding:10px 14px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.10);}
+.summary-top{display:flex;gap:6px;align-items:stretch;}
+.summary-stat{flex:1;text-align:center;padding:7px 6px;border-radius:6px;}
+.summary-stat.stat-green{background:#EAF7EE;}
+.summary-stat.stat-red{background:#FDECEA;}
+.summary-stat.stat-orange{background:#FEF5E7;}
+.summary-stat.stat-gray{background:#F2F3F4;}
+.summary-stat .num{font-size:17px;font-weight:900;font-family:‘DM Mono’,monospace;line-height:1;}
+.summary-stat .lbl{font-size:9px;margin-top:3px;font-weight:600;}
+.num-green{color:#1E8449;} .num-red{color:#C0392B;} .num-orange{color:#E67E22;} .num-gray{color:#717D7E;}
+.lbl-green{color:#1E8449;} .lbl-red{color:#C0392B;} .lbl-orange{color:#E67E22;} .lbl-gray{color:#717D7E;}
+
+/* STATS BAR 他タブ共通（備蓄品と同スタイル） */
+.view-summary-bar{background:#FFFFFF;border-radius:6px;padding:10px 14px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.10);display:flex;gap:6px;align-items:stretch;}
+.view-summary-stat{flex:1;text-align:center;padding:7px 6px;border-radius:6px;max-width:calc((100% - 18px) / 4);}
+.view-summary-stat.stat-green{background:#EAF7EE;}
+.view-summary-stat.stat-red{background:#FDECEA;}
+.view-summary-stat.stat-gray{background:#F2F3F4;}
+.view-summary-stat .vsnum{font-size:17px;font-weight:900;font-family:‘DM Mono’,monospace;line-height:1;}
+.view-summary-stat .vslbl{font-size:9px;margin-top:3px;font-weight:600;}
+.view-summary-divider{display:none;}
 
 /* TABS */
 #tabs{display:flex;gap:4px;margin-bottom:16px;background:#FFFFFF;padding:6px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.10);}
-.tab{flex:1;padding:7px;text-align:center;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;transition:all .15s;border:none;background:transparent;font-family:‘Noto Sans JP’,sans-serif;color:#717D7E;}
+.tab{flex:1;padding:9px 4px;text-align:center;border-radius:4px;cursor:pointer;font-size:12px;font-weight:600;transition:all .15s;border:none;background:transparent;font-family:‘Noto Sans JP’,sans-serif;color:#717D7E;}
 .tab:hover{background:#F2F3F4;}
 .tab.active{background:#1A252F;color:#FFFFFF;}
 .tab.hidden-tab{display:none;}
 
-/* STATS BAR (共通) */
-.view-summary-bar{background:#FFFFFF;border-radius:6px;padding:10px 16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.10);display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
-.view-summary-stat{text-align:center;padding:0 8px;}
-.view-summary-stat .vsnum{font-size:18px;font-weight:900;font-family:‘DM Mono’,monospace;line-height:1;}
-.view-summary-stat .vslbl{font-size:10px;color:#717D7E;margin-top:1px;}
-.view-summary-divider{width:1px;height:36px;background:#D5D8DC;}
-
 #search-wrap{margin-bottom:12px;}
-#search-input{width:100%;padding:8px 14px;border:1.5px solid #D5D8DC;border-radius:6px;font-family:‘Noto Sans JP’,sans-serif;font-size:13px;background:#FFFFFF;box-shadow:0 2px 8px rgba(0,0,0,.10);}
-#search-input:focus{outline:none;border-color:#2471A3;}
+#search-wrap-pre,#search-wrap-outing,#search-wrap-car{margin-bottom:12px;}
+#search-input,#search-input-pre,#search-input-outing,#search-input-car{width:100%;padding:8px 14px;border:1.5px solid #D5D8DC;border-radius:6px;font-family:‘Noto Sans JP’,sans-serif;font-size:13px;background:#FFFFFF;box-shadow:0 2px 8px rgba(0,0,0,.10);}
+#search-input:focus,#search-input-pre:focus,#search-input-outing:focus,#search-input-car:focus{outline:none;border-color:#2471A3;}
 .filter-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center;}
 .filter-label{font-size:11px;color:#717D7E;}
 .filter-chip{border:1.5px solid #D5D8DC;background:#FFFFFF;border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:‘Noto Sans JP’,sans-serif;transition:all .15s;color:#2C3E50;}
@@ -94,17 +103,19 @@ select.setting-select{width:100%;border:1.5px solid #D5D8DC;border-radius:4px;pa
 
 /* SECTION */
 .section{background:#FFFFFF;border-radius:6px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.10);overflow:hidden;}
-.section-header{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;user-select:none;border-bottom:1px solid #D5D8DC;}
-.section-header:hover{background:#FAFAFA;}
+.section-header{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;user-select:none;border-bottom:1px solid #D5D8DC;background:#1A252F;}
+.section-header:hover{background:#2C3E50;}
 .section-icon{font-size:16px;}
-.section-title{font-size:13px;font-weight:700;flex:1;}
-.section-stats{font-family:‘DM Mono’,monospace;font-size:11px;color:#717D7E;}
-.section-toggle{font-size:11px;color:#717D7E;transition:transform .2s;}
+.section-title{font-size:13px;font-weight:700;flex:1;color:#FFFFFF;}
+.section-stats{font-family:‘DM Mono’,monospace;font-size:11px;color:rgba(255,255,255,.6);}
+.section-toggle{font-size:11px;color:rgba(255,255,255,.6);transition:transform .2s;}
 .section.collapsed .section-toggle{transform:rotate(-90deg);}
 .section.collapsed .section-body{display:none;}
 
-.section-header-static{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #D5D8DC;background:#FAFAFA;white-space:nowrap;overflow:hidden;}
-.subcategory-header{padding:6px 16px;font-size:10px;font-weight:700;color:#717D7E;background:#F2F3F4;border-bottom:1px solid #D5D8DC;letter-spacing:.08em;text-transform:uppercase;}
+.section-header-static{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid #D5D8DC;background:#1A252F;white-space:nowrap;overflow:hidden;}
+.section-header-static .section-icon{font-size:16px;}
+.section-header-static .section-title{font-size:13px;font-weight:700;flex:1;color:#FFFFFF;}
+.subcategory-header{padding:8px 16px;font-size:11px;font-weight:700;color:#FFFFFF;background:#2C3E50;border-bottom:1px solid #34495E;letter-spacing:.04em;}
 
 /* TABLE */
 .item-table{width:100%;border-collapse:collapse;}
@@ -164,18 +175,20 @@ input[type=checkbox].item-check{width:15px;height:15px;cursor:pointer;accent-col
 .tips-box ul{font-size:12px;line-height:2;padding-left:18px;color:#2C3E50;}
 
 /* MOBILE SIDEBAR TOGGLE */
-#sidebar-toggle{display:none;width:100%;background:#FFFFFF;color:#1A252F;border:none;border-top:1px solid #D5D8DC;border-bottom:1px solid #D5D8DC;padding:10px 16px;font-family:‘Noto Sans JP’,sans-serif;font-size:12px;font-weight:600;cursor:pointer;text-align:left;}
-#sidebar-toggle-arrow{transition:transform .2s;display:inline-block;margin-left:6px;font-size:10px;}
+#sidebar-toggle{display:none;width:100%;background:#F2F3F4;color:#1A252F;border:none;border-top:1px solid #D5D8DC;border-bottom:1px solid #D5D8DC;padding:11px 16px;font-family:‘Noto Sans JP’,sans-serif;font-size:12px;font-weight:600;cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px;}
+#sidebar-toggle-label{flex:1;}
+#sidebar-toggle-badges{display:flex;gap:4px;flex-wrap:wrap;}
+#sidebar-toggle-arrow{transition:transform .2s;font-size:10px;color:#717D7E;}
 #sidebar-toggle.open #sidebar-toggle-arrow{transform:rotate(180deg);}
 
 @media (max-width:700px){
 #app{flex-direction:column;}
-#sidebar-toggle{display:block;order:1;}
+#sidebar-toggle{display:flex;order:1;}
 #sidebar{width:100%;min-width:unset;height:auto;position:static;border-right:none;overflow:hidden;max-height:0;transition:max-height .35s ease;order:2;visibility:hidden;}
 #sidebar.open{max-height:2000px;border-bottom:1px solid #D5D8DC;visibility:visible;}
 #sidebar-inner{padding:12px 14px 16px;}
 #main{padding:12px 10px;order:3;}
-#tabs .tab{font-size:10px;padding:6px 3px;}
+#tabs .tab{font-size:10px;padding:7px 2px;}
 .item-table th:nth-child(4),.item-table td:nth-child(4){display:none;}
 #topbar h1{font-size:13px;}
 }
@@ -200,7 +213,11 @@ body{background:white;font-size:11px;}
 </div>
 
 <div id="app">
-<button id="sidebar-toggle" onclick="toggleSidebar()">⚙️ 条件を設定する（タップで開閉）<span id="sidebar-toggle-arrow">▼</span></button>
+<button id="sidebar-toggle" onclick="toggleSidebar()">
+  <span>⚙️</span>
+  <span id="sidebar-toggle-label">家族構成・住居を設定する</span>
+  <span id="sidebar-toggle-arrow">▼</span>
+</button>
 <div id="sidebar">
 <div id="sidebar-inner">
   <h2>⚙️ 家族・住環境の設定</h2>
@@ -268,25 +285,25 @@ body{background:white;font-size:11px;}
   <div id="view-home">
     <div id="summary-bar">
       <div class="summary-top">
-        <div class="summary-stat">
+        <div class="summary-stat stat-green">
           <div class="num num-green" id="stat-checked">0</div>
-          <div class="lbl">入手済み</div>
+          <div class="lbl lbl-green">入手済み</div>
         </div>
-        <div class="summary-stat">
+        <div class="summary-stat stat-red">
           <div class="num num-red" id="stat-remain">0</div>
-          <div class="lbl">未入手</div>
+          <div class="lbl lbl-red">未入手</div>
         </div>
-        <div class="summary-stat">
-          <div class="num num-red" id="stat-req-remain">0</div>
-          <div class="lbl">必須・未入手</div>
+        <div class="summary-stat stat-orange">
+          <div class="num num-orange" id="stat-req-remain">0</div>
+          <div class="lbl lbl-orange">必須・未入手</div>
         </div>
-        <div class="summary-stat">
+        <div class="summary-stat stat-gray">
           <div class="num num-gray" id="stat-total">0</div>
-          <div class="lbl">品目数</div>
+          <div class="lbl lbl-gray">品目数</div>
         </div>
       </div>
     </div>
-    <div id="search-wrap"><input id="search-input" type="text" placeholder="🔍 品目名・説明で検索" oninput="applyFilters()"></div>
+    <div id="search-wrap"><input id="search-input" type="text" placeholder="🔍 検索" oninput="applyFilters()"></div>
     <div class="filter-row">
       <button class="filter-chip active" data-priority="all" onclick="togglePriorityChip(this)">すべて</button>
       <button class="filter-chip" data-priority="required" onclick="togglePriorityChip(this)">🔴 必須のみ</button>
@@ -300,26 +317,21 @@ body{background:white;font-size:11px;}
 
   <div id="view-preaction" style="display:none">
     <div class="view-summary-bar" id="preaction-summary">
-      <div class="view-summary-stat">
+      <div class="view-summary-stat stat-green">
         <div class="vsnum num-green" id="pre-stat-done">0</div>
-        <div class="vslbl">実施済み</div>
+        <div class="vslbl lbl-green">実施済み</div>
       </div>
-      <div class="view-summary-divider"></div>
-      <div class="view-summary-stat">
+      <div class="view-summary-stat stat-red">
         <div class="vsnum num-red" id="pre-stat-remain">0</div>
-        <div class="vslbl">未実施</div>
+        <div class="vslbl lbl-red">未実施</div>
       </div>
-      <div class="view-summary-divider"></div>
-      <div class="view-summary-stat">
+      <div class="view-summary-stat stat-gray">
         <div class="vsnum num-gray" id="pre-stat-total">0</div>
-        <div class="vslbl">項目数</div>
+        <div class="vslbl lbl-gray">項目数</div>
       </div>
     </div>
+    <div id="search-wrap-pre"><input id="search-input-pre" type="text" placeholder="🔍 検索" oninput="renderPreaction()"></div>
     <div class="outing-section">
-      <div class="section-header-static">
-        <span class="section-icon">✅</span>
-        <span class="section-title">災害前にやっておくこと</span>
-      </div>
       <div id="preaction-list"></div>
     </div>
   </div>
@@ -328,27 +340,21 @@ body{background:white;font-size:11px;}
 
   <div id="view-outing" style="display:none">
     <div class="view-summary-bar">
-      <div class="view-summary-stat">
+      <div class="view-summary-stat stat-green">
         <div class="vsnum num-green" id="outing-stat-done">0</div>
-        <div class="vslbl">入手済み</div>
+        <div class="vslbl lbl-green">入手済み</div>
       </div>
-      <div class="view-summary-divider"></div>
-      <div class="view-summary-stat">
+      <div class="view-summary-stat stat-red">
         <div class="vsnum num-red" id="outing-stat-remain">0</div>
-        <div class="vslbl">未入手</div>
+        <div class="vslbl lbl-red">未入手</div>
       </div>
-      <div class="view-summary-divider"></div>
-      <div class="view-summary-stat">
+      <div class="view-summary-stat stat-gray">
         <div class="vsnum num-gray" id="outing-stat-total">0</div>
-        <div class="vslbl">品目数</div>
+        <div class="vslbl lbl-gray">品目数</div>
       </div>
     </div>
+    <div id="search-wrap-outing"><input id="search-input-outing" type="text" placeholder="🔍 検索" oninput="renderOutingList()"></div>
     <div class="outing-section">
-      <div class="section-header-static">
-        <span class="section-icon">👜</span>
-        <span class="section-title">外出時 携帯品</span>
-        <span style="font-size:10px;color:#717D7E;margin-left:8px;">合計500g以内目安</span>
-      </div>
       <div id="outing-tbody-wrap"></div>
     </div>
   </div>
@@ -357,27 +363,21 @@ body{background:white;font-size:11px;}
 
   <div id="view-car" style="display:none">
     <div class="view-summary-bar">
-      <div class="view-summary-stat">
+      <div class="view-summary-stat stat-green">
         <div class="vsnum num-green" id="car-stat-done">0</div>
-        <div class="vslbl">入手済み</div>
+        <div class="vslbl lbl-green">入手済み</div>
       </div>
-      <div class="view-summary-divider"></div>
-      <div class="view-summary-stat">
+      <div class="view-summary-stat stat-red">
         <div class="vsnum num-red" id="car-stat-remain">0</div>
-        <div class="vslbl">未入手</div>
+        <div class="vslbl lbl-red">未入手</div>
       </div>
-      <div class="view-summary-divider"></div>
-      <div class="view-summary-stat">
+      <div class="view-summary-stat stat-gray">
         <div class="vsnum num-gray" id="car-stat-total">0</div>
-        <div class="vslbl">品目数</div>
+        <div class="vslbl lbl-gray">品目数</div>
       </div>
     </div>
+    <div id="search-wrap-car"><input id="search-input-car" type="text" placeholder="🔍 検索" oninput="renderCarList()"></div>
     <div class="outing-section">
-      <div class="section-header-static">
-        <span class="section-icon">🚗</span>
-        <span class="section-title">車載 常備品</span>
-        <span style="font-size:10px;color:#717D7E;margin-left:8px;">トランクまたは車内に常時積んでおく</span>
-      </div>
       <div id="car-tbody-wrap"></div>
     </div>
   </div>
@@ -769,7 +769,7 @@ function renderSections() {
           <div class="item-sub">${item.sub||''}</div>
           ${item.location?`<div class="item-location">${item.location}</div>`:''}
         </td>
-        <td>${badge(item.priority)}</td>
+        <td style="text-align:right;padding-right:12px;vertical-align:middle;">${badge(item.priority)}</td>
         <td class="qty-cell"><input class="qty-input" type="text" value="${qty||item.qty||''}" onchange="saveQty('${id}',this.value)" placeholder="${item.qty||''}"></td>
       </tr>`;
     });
@@ -789,7 +789,7 @@ function renderSections() {
           <thead><tr>
             <th style="width:34px">✓</th>
             <th>品目・用途・保管場所</th>
-            <th style="width:90px">優先度</th>
+            <th style="width:68px;text-align:right;padding-right:12px">優先度</th>
             <th style="width:80px">数量目安</th>
           </tr></thead>
           <tbody>${rows}</tbody>
@@ -815,14 +815,18 @@ function renderSections() {
 // ═══════════════════════════════════════════════════
 // RENDER: 事前対処・外出・車載（カテゴリ小見出し共通）
 // ═══════════════════════════════════════════════════
-function renderWithCategories(items, wrapId, prefix, checkedMap, toggleFn, extraCol) {
+function renderWithCategories(items, wrapId, prefix, checkedMap, toggleFn, extraCol, searchInputId) {
   const wrap = document.getElementById(wrapId);
   if (!wrap) return;
+  const q = searchInputId ? (document.getElementById(searchInputId)?.value || '').trim().toLowerCase() : '';
   let done = 0, html = '', lastCat = null;
   items.forEach((item, i) => {
     const id = prefix + '_' + i;
     const chk = !!checkedMap[id];
     if (chk) done++;
+    // 検索フィルター
+    const matchQ = !q || (item.name||'').toLowerCase().includes(q) || (item.detail||'').toLowerCase().includes(q) || (item.sub||'').toLowerCase().includes(q);
+    if (!matchQ) return;
     if (item.cat && item.cat !== lastCat) {
       html += `<div class="subcategory-header">${item.cat}</div>`;
       lastCat = item.cat;
@@ -862,7 +866,7 @@ function renderWithCategories(items, wrapId, prefix, checkedMap, toggleFn, extra
 }
 
 function renderPreaction() {
-  const done = renderWithCategories(PREACTIONS, 'preaction-list', 'pre', preChecked, 'togglePre', 'target');
+  const done = renderWithCategories(PREACTIONS, 'preaction-list', 'pre', preChecked, 'togglePre', 'target', 'search-input-pre');
   const total = PREACTIONS.length;
   const remain = total - done;
   document.getElementById('pre-stat-done').textContent   = done;
@@ -871,7 +875,7 @@ function renderPreaction() {
 }
 
 function renderOutingList() {
-  const done = renderWithCategories(OUTING_ITEMS, 'outing-tbody-wrap', 'outing', outingChecked, 'toggleOuting', 'weight');
+  const done = renderWithCategories(OUTING_ITEMS, 'outing-tbody-wrap', 'outing', outingChecked, 'toggleOuting', 'weight', 'search-input-outing');
   const total = OUTING_ITEMS.length;
   const remain = total - done;
   document.getElementById('outing-stat-done').textContent   = done;
@@ -880,7 +884,7 @@ function renderOutingList() {
 }
 
 function renderCarList() {
-  const done = renderWithCategories(CAR_ITEMS, 'car-tbody-wrap', 'car', carChecked, 'toggleCar', 'none');
+  const done = renderWithCategories(CAR_ITEMS, 'car-tbody-wrap', 'car', carChecked, 'toggleCar', 'none', 'search-input-car');
   const total = CAR_ITEMS.length;
   const remain = total - done;
   document.getElementById('car-stat-done').textContent   = done;
