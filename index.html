@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>防災用品チェックリスト</title>
+<title>防災用品チェックリスト v3C</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -142,20 +142,21 @@ select.setting-select{width:100%;border:1.5px solid #D5D8DC;border-radius:4px;pa
 
 .check-cell{width:34px;text-align:center;vertical-align:middle!important;}
 input[type=checkbox].item-check{width:15px;height:15px;cursor:pointer;accent-color:#1E8449;}
-.item-name{font-weight:600;line-height:1.4;}
-.item-name.checked-label{text-decoration:line-through;color:#AAB7B8;font-weight:400;}
+.item-name{font-weight:600;line-height:1.5;display:flex;align-items:baseline;justify-content:space-between;gap:8px;width:100%;}
+.item-name-text{flex:1;}
+.item-name.checked-label .item-name-text{text-decoration:line-through;color:#AAB7B8;font-weight:400;}
 .item-sub{font-size:11px;color:#2C3E50;margin-top:2px;line-height:1.5;}
 .item-location{font-size:10px;color:#2471A3;margin-top:2px;}
-.item-pack-badge{display:inline-block;font-size:10px;color:#1E8449;font-weight:700;margin-left:4px;}
+.qty-badge{font-size:10px;font-family:‘DM Mono’,monospace;color:#717D7E;border:1px solid #D5D8DC;border-radius:4px;padding:1px 6px;background:#F8F9FA;white-space:nowrap;flex-shrink:0;}
 
 .badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:10px;font-weight:700;white-space:nowrap;}
 .badge-r{background:#FDECEA;color:#C0392B;border-left:3px solid #C0392B;}
 .badge-y{background:#FEF9E7;color:#9A7D0A;border-left:3px solid #E67E22;}
 .badge-b{background:#EBF5FB;color:#2471A3;border-left:3px solid #2471A3;}
 
-.qty-cell{width:72px;}
-.qty-input{width:64px;border:1px solid #D5D8DC;border-radius:3px;padding:2px 5px;text-align:center;font-family:‘DM Mono’,monospace;font-size:11px;background:transparent;}
-.qty-input:focus{outline:none;border-color:#2471A3;}
+.qty-cell{display:none;}
+.qty-input{display:none;}
+.qty-badge{display:inline-block;font-size:10px;font-family:‘DM Mono’,monospace;color:#717D7E;border:1px solid #D5D8DC;border-radius:4px;padding:1px 6px;margin-left:6px;background:#F8F9FA;vertical-align:middle;white-space:nowrap;}
 
 /* OUTING / CAR ITEMS (統一UI) */
 .outing-section{background:#FFFFFF;border-radius:6px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.10);overflow:hidden;}
@@ -202,7 +203,6 @@ input[type=checkbox].item-check{width:15px;height:15px;cursor:pointer;accent-col
 #sidebar-inner{padding:12px 14px 16px;}
 #main{padding:12px 10px;order:3;}
 #tabs .tab{font-size:10px;padding:7px 2px;}
-.item-table th:nth-child(4),.item-table td:nth-child(4){display:none;}
 #topbar h1{font-size:15px;}
 .cat-nav-section{display:none;}
 }
@@ -269,7 +269,7 @@ body{background:white;font-size:11px;}
   <h2>📊 凡例</h2>
   <div class="legend-item"><span class="legend-badge badge-required">必須</span>命に直結・最優先</div>
   <div class="legend-item"><span class="legend-badge badge-recommend">推奨</span>1週間の生活維持に必要</div>
-  <div class="legend-item"><span class="legend-badge badge-nice">あると安心</span>余裕があれば備えたい</div>
+  <div class="legend-item"><span class="legend-badge badge-nice">安心</span>余裕があれば備えたい</div>
   <div style="margin-top:8px;">
     <div class="legend-item"><span style="font-size:13px;">🎒</span><span style="font-size:11px;">避難リュックに入れる品目</span></div>
   </div>
@@ -410,11 +410,11 @@ const CATEGORIES = [
   {
     id:"water", icon:"💧", title:"水・飲料水",
     items:[
-      {name:"飲料水（ペットボトル）", sub:"飲料・調理・服薬用。1人1日3L×7日分が目安（2Lボトルが保管しやすい）", location:"📍涼しい収納スペース・押し入れ", priority:"required", phase:1, flags:"all", qty:"21L/人", pack:true},
+      {name:"飲料水（ペットボトル）", sub:"飲料・調理・服薬用。1人1日3L×7日分が目安（2Lボトルが保管しやすい）。<br>🎒500ml×2本", location:"📍涼しい収納スペース・押し入れ", priority:"required", phase:1, flags:"all", qty:"21L/人", pack:true},
       {name:"ウォータータンク（折りたたみ）", sub:"給水車・川からの水を運ぶ。10〜20L容量推奨。使わない時はコンパクトに収納", location:"📍玄関・収納スペース", priority:"required", phase:1, flags:"all", qty:"1〜2個"},
       {name:"生活用水タンク（大型）", sub:"トイレ・洗い物・清拭用。高層マンションは特に多めに備蓄（エレベーター停止で給水車から水を運べない）", location:"📍浴室・洗面所付近", priority:"required", phase:1, flags:"all", qty:"100L以上"},
-      {name:"浄水器・携帯浄水ストロー", sub:"川・水道水を飲料水に変換。LifeStraw等。浄水タブレットとセットで活用", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"1個", pack:true},
-      {name:"浄水タブレット（塩素系）", sub:"水の殺菌・浄化。Aquatabs等。水1Lあたり1錠で安全な飲料水に", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"1箱", pack:true},
+      {name:"浄水器・携帯浄水ストロー", sub:"川・水道水を飲料水に変換。LifeStraw等。浄水タブレットとセットで活用。<br>🎒全量", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"1個", pack:true},
+      {name:"浄水タブレット（塩素系）", sub:"水の殺菌・浄化。Aquatabs等。水1Lあたり1錠で安全な飲料水に。<br>🎒全量", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"1箱", pack:true},
       {name:"井戸・雨水タンク", sub:"長期断水時の生活用水源。設置工事が必要だが最強の水インフラ", location:"📍庭・屋外", priority:"nice", phase:3, flags:["house"], qty:"検討"},
       {name:"赤ちゃん用ミルク調整水（軟水）", sub:"粉ミルク調製用。硬水不可・必ず軟水を使用。液体ミルクとあわせて備蓄", location:"📍育児用品収納", priority:"required", phase:1, flags:["baby"], qty:"多め"},
     ]
@@ -422,15 +422,15 @@ const CATEGORIES = [
   {
     id:"food", icon:"🍚", title:"食料・非常食",
     items:[
-      {name:"アルファ米（白米・炊き込み）", sub:"主食。水またはお湯を注ぐだけで食べられる。5年保存。バリエーションを揃えると避難疲れが軽減", location:"📍収納スペース・押し入れ", priority:"required", phase:1, flags:"all", qty:"1食/人/日×7", pack:true},
-      {name:"缶詰（魚・肉・豆類）", sub:"主菜・タンパク源。プルトップ缶を選ぶと缶切り不要。種類を多く揃えて食事に変化を", location:"📍収納スペース", priority:"required", phase:1, flags:"all", qty:"1缶/人/日×7", pack:true},
+      {name:"アルファ米（白米・炊き込み）", sub:"主食。水またはお湯を注ぐだけで食べられる。5年保存。バリエーションを揃えると避難疲れが軽減。<br>🎒1〜2食分", location:"📍収納スペース・押し入れ", priority:"required", phase:1, flags:"all", qty:"1食/人/日×7", pack:true},
+      {name:"缶詰（魚・肉・豆類）", sub:"主菜・タンパク源。プルトップ缶を選ぶと缶切り不要。種類を多く揃えて食事に変化を。<br>🎒1〜2缶", location:"📍収納スペース", priority:"required", phase:1, flags:"all", qty:"1缶/人/日×7", pack:true},
       {name:"カップ麺・インスタント麺", sub:"簡易主食。お湯があれば食べられる。ローリングストックで鮮度維持を。食べ慣れた味が精神的安定に効果的", location:"📍収納スペース", priority:"required", phase:1, flags:"all", qty:"7食/人"},
-      {name:"クラッカー・乾パン", sub:"水なしでも食べられる主食・間食。賞味期限が長いものを選ぶ", location:"📍収納スペース・避難リュック", priority:"required", phase:1, flags:"all", qty:"2〜3箱", pack:true},
+      {name:"クラッカー・乾パン", sub:"水なしでも食べられる主食・間食。賞味期限が長いものを選ぶ。<br>🎒1箱", location:"📍収納スペース・避難リュック", priority:"required", phase:1, flags:"all", qty:"2〜3箱", pack:true},
       {name:"レトルト食品（カレー・パスタソース等）", sub:"主食・副食。湯煎または水でも可能な製品を選ぶ。アルファ米と組み合わせると食事の質が上がる", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"14食/人"},
-      {name:"栄養補助食品（カロリーメイト等）", sub:"短期集中エネルギー補給・携帯食。バラバラにならないよう箱ごと保管", location:"📍避難リュック・収納スペース", priority:"recommend", phase:1, flags:"all", qty:"5〜10箱", pack:true},
-      {name:"チョコ・飴・ドライフルーツ", sub:"即時エネルギー補給＋精神的安定。甘いものが心を落ち着かせる効果は被災経験者の証言でも多数", location:"📍避難リュック", priority:"recommend", phase:1, flags:"all", qty:"適量", pack:true},
+      {name:"栄養補助食品（カロリーメイト等）", sub:"短期集中エネルギー補給・携帯食。バラバラにならないよう箱ごと保管。<br>🎒1〜2箱", location:"📍避難リュック・収納スペース", priority:"recommend", phase:1, flags:"all", qty:"5〜10箱", pack:true},
+      {name:"チョコ・飴・ドライフルーツ", sub:"即時エネルギー補給＋精神的安定。甘いものが心を落ち着かせる効果は被災経験者の証言でも多数。<br>🎒全量", location:"📍避難リュック", priority:"recommend", phase:1, flags:"all", qty:"適量", pack:true},
       {name:"粉末スープ・インスタント味噌汁", sub:"温かい食事による精神的安定。体が温まることで気力が回復する", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"適量"},
-      {name:"乳幼児用ミルク（粉ミルク・液体ミルク）", sub:"授乳できない・母乳が出ない場合の代替栄養源。液体ミルクは開封してそのまま飲める点が非常時に有利", location:"📍育児用品収納", priority:"required", phase:1, flags:["baby"], qty:"7日分", pack:true},
+      {name:"乳幼児用ミルク（粉ミルク・液体ミルク）", sub:"授乳できない・母乳が出ない場合の代替栄養源。液体ミルクは開封してそのまま飲める点が非常時に有利。<br>🎒2〜3日分", location:"📍育児用品収納", priority:"required", phase:1, flags:["baby"], qty:"7日分", pack:true},
       {name:"ベビーフード（瓶詰・レトルト）", sub:"離乳食期の子どもの食事。月齢に合わせて種類を揃える", location:"📍育児用品収納", priority:"required", phase:1, flags:["baby"], qty:"7日分"},
       {name:"高齢者向け介護食・やわらか食", sub:"嚥下困難な方の食事確保。レトルト介護食は常温保存可能", location:"📍収納スペース", priority:"required", phase:1, flags:["elder"], qty:"7日分"},
       {name:"ペット用フード（ドライ・ウェット）", sub:"ペットの食事確保。普段のフードを最低14日分ローリングストック", location:"📍収納スペース", priority:"required", phase:1, flags:["pet"], qty:"14日分"},
@@ -445,13 +445,13 @@ const CATEGORIES = [
       {name:"カセットボンベ", sub:"コンロ・ストーブの燃料。1本で約60分使用。最低15本（7日分）を目安に備蓄", location:"📍収納スペース・直射日光を避けた場所", priority:"required", phase:1, flags:"all", qty:"15本以上"},
       {name:"カセットガスストーブ（屋内用）", sub:"暖房。カセットボンベと共用できるため燃料管理が簡単。マンションでも使用可能。換気必須", location:"📍収納スペース・リビング", priority:"required", phase:1, flags:"all", qty:"1台"},
       {name:"石油ストーブ＋灯油", sub:"暖房・湯沸かし。ストーブ上で調理もできる。灯油を18L缶で備蓄。換気必須", location:"📍収納スペース・屋外倉庫", priority:"recommend", phase:1, flags:["house"], qty:"1台＋18L缶"},
-      {name:"固形燃料・アルコールストーブ", sub:"カセットガスが切れた時のバックアップ。コンパクトで避難リュックにも", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"1セット", pack:true},
+      {name:"固形燃料・アルコールストーブ", sub:"カセットガスが切れた時のバックアップ。コンパクトで避難リュックにも。<br>🎒全量", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"1セット", pack:true},
       {name:"バーベキューグリル・七輪", sub:"屋外での本格調理。マンションは駐車場・公開スペース等での使用を管理規約確認。非常時は柔軟に。炭も備蓄を", location:"📍屋外倉庫・ベランダ", priority:"nice", phase:3, flags:"all", qty:"1台"},
       {name:"耐熱ビニール袋（湯煎調理用）", sub:"食材を袋に入れて湯煎調理。鍋を汚さず洗い物が出ない。水の節約に直結", location:"📍キッチン収納", priority:"recommend", phase:1, flags:"all", qty:"1箱"},
       {name:"紙皿・紙コップ・割り箸", sub:"洗い物ゼロ作戦。断水時は食器を洗えないため使い捨て食器が必須", location:"📍収納スペース", priority:"recommend", phase:1, flags:"all", qty:"50枚以上"},
       {name:"ラップフィルム", sub:"皿に巻いて汚れを防ぎ使いまわす・食品の保存・調理補助", location:"📍キッチン収納", priority:"recommend", phase:1, flags:"all", qty:"2〜3本"},
       {name:"アルミホイル", sub:"食材を包んで直火調理・保温・応急的な防寒材にも", location:"📍キッチン収納", priority:"recommend", phase:1, flags:"all", qty:"1〜2本"},
-      {name:"着火剤・ライター", sub:"コンロ・ストーブ・ろうそくへの着火。防水ライターを複数本分散保管", location:"📍キッチン・避難リュック", priority:"required", phase:1, flags:"all", qty:"3〜5個", pack:true},
+      {name:"着火剤・ライター", sub:"コンロ・ストーブ・ろうそくへの着火。防水ライターを複数本分散保管。<br>🎒全量", location:"📍キッチン・避難リュック", priority:"required", phase:1, flags:"all", qty:"3〜5個", pack:true},
       {name:"湯たんぽ", sub:"暖房。お湯を沸かせれば繰り返し使えてカイロより経済的。布で包んで布団に入れると翌朝まで温かい", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"人数分"},
     ]
   },
@@ -460,43 +460,43 @@ const CATEGORIES = [
     items:[
       {name:"ポータブル電源（蓄電池式）", sub:"停電時の電力の要。スマホ・ランタン・医療機器・小型家電を充電。1kWh以上推奨。ソーラーパネルと組み合わせれば長期運用可能", location:"📍リビング・すぐ取り出せる場所", priority:"required", phase:1, flags:"all", qty:"1台"},
       {name:"ソーラーパネル（充電用）", sub:"ポータブル電源への充電。100〜200W折りたたみ式が実用的。晴天時に電力を自給できる。車での移動時も使用可能", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"1枚"},
-      {name:"モバイルバッテリー（大容量）", sub:"スマホ・タブレットの充電。20,000mAh以上推奨。ポータブル電源がない場合は特に必須", location:"📍普段使いのバッグ・枕元", priority:"required", phase:1, flags:"all", qty:"1〜2個/人", pack:true},
-      {name:"充電ケーブル（Lightning/USB-C/Micro）", sub:"各機器の充電。対応機種に合わせて複数本備蓄。断線は多いので予備多めに", location:"📍枕元・避難リュック", priority:"required", phase:1, flags:"all", qty:"各2本", pack:true},
-      {name:"乾電池（単1・単2・単3・単4）", sub:"ラジオ・懐中電灯・各種機器の電源。特に単1・単2は見落としやすく店頭でも売り切れやすい。各10本以上", location:"📍収納スペース", priority:"required", phase:1, flags:"all", qty:"各10本以上", pack:true},
-      {name:"LED懐中電灯（防水）", sub:"停電時の移動・作業用照明。単3電池式が汎用的。枕元に常備しておくと就寝中の地震に対応できる", location:"📍枕元・玄関", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"モバイルバッテリー（大容量）", sub:"スマホ・タブレットの充電。20,000mAh以上推奨。ポータブル電源がない場合は特に必須。<br>🎒全量", location:"📍普段使いのバッグ・枕元", priority:"required", phase:1, flags:"all", qty:"1〜2個/人", pack:true},
+      {name:"充電ケーブル（Lightning/USB-C/Micro）", sub:"各機器の充電。対応機種に合わせて複数本備蓄。断線は多いので予備多めに。<br>🎒全量", location:"📍枕元・避難リュック", priority:"required", phase:1, flags:"all", qty:"各2本", pack:true},
+      {name:"乾電池（単1・単2・単3・単4）", sub:"ラジオ・懐中電灯・各種機器の電源。特に単1・単2は見落としやすく店頭でも売り切れやすい。各10本以上。<br>🎒各4本程度", location:"📍収納スペース", priority:"required", phase:1, flags:"all", qty:"各10本以上", pack:true},
+      {name:"LED懐中電灯（防水）", sub:"停電時の移動・作業用照明。単3電池式が汎用的。枕元に常備しておくと就寝中の地震に対応できる。<br>🎒全量", location:"📍枕元・玄関", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
       {name:"LEDランタン", sub:"部屋全体の照明。充電式が経済的。テーブルに置いて食事・作業ができる明るさが重要", location:"📍リビング・各部屋", priority:"required", phase:1, flags:"all", qty:"2〜3個"},
-      {name:"ヘッドライト", sub:"両手が使える照明。夜間の作業・避難移動に必須。懐中電灯の上位互換", location:"📍枕元・避難リュック", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"ヘッドライト", sub:"両手が使える照明。夜間の作業・避難移動に必須。懐中電灯の上位互換。<br>🎒全量", location:"📍枕元・避難リュック", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
       {name:"ハンドクランク充電ラジオ", sub:"停電時の情報収集＋緊急充電。電池不要で手回し発電。ラジオ・充電・ライト機能が一体型のものが最も効率的", location:"📍リビング・収納スペース", priority:"required", phase:1, flags:"all", qty:"1台"},
       {name:"ろうそく・防災キャンドル", sub:"電池・充電切れ時の最終照明手段。長時間タイプ推奨。使用時は必ず換気・転倒防止対策を", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"10本以上"},
-      {name:"乾電池式充電器", sub:"乾電池でスマホを充電できる最終手段。ポータブル電源・モバイルバッテリーが切れた時用", location:"📍避難リュック", priority:"recommend", phase:1, flags:"all", qty:"1個", pack:true},
+      {name:"乾電池式充電器", sub:"乾電池でスマホを充電できる最終手段。ポータブル電源・モバイルバッテリーが切れた時用。<br>🎒1個", location:"📍避難リュック", priority:"recommend", phase:1, flags:"all", qty:"1個", pack:true},
       {name:"発電機（ガソリン・カセット式）", sub:"大容量の電力確保。排気ガスが出るため屋外専用。マンションは使いにくい。エンジン音が大きく住宅密集地では使いづらい面もある", location:"📍屋外倉庫・ガレージ", priority:"nice", phase:3, flags:["house"], qty:"検討"},
     ]
   },
   {
     id:"medical", icon:"🩺", title:"医療・救急",
     items:[
-      {name:"救急箱（絆創膏・ガーゼ・包帯・三角巾）", sub:"外傷・切り傷・捻挫への応急処置。大・中・小サイズをそれぞれ複数枚", location:"📍洗面所・収納スペース", priority:"required", phase:1, flags:"all", qty:"1セット", pack:true},
-      {name:"消毒液（アルコール・ポビドンヨード）", sub:"傷口の消毒。断水時は水道水で洗えないため消毒液の重要性が増す", location:"📍洗面所・救急箱", priority:"required", phase:1, flags:"all", qty:"各1本", pack:true},
-      {name:"鎮痛解熱剤（ロキソニン・カロナール等）", sub:"頭痛・発熱・歯痛・打撲痛への対処。避難ストレスで体の不調が出やすい。複数種類あると安心", location:"📍救急箱", priority:"required", phase:1, flags:"all", qty:"30錠以上", pack:true},
-      {name:"胃腸薬・整腸剤", sub:"避難ストレス・水や食事の変化による消化器症状への対処。下痢は脱水を招くため特に重要", location:"📍救急箱", priority:"required", phase:1, flags:"all", qty:"1箱", pack:true},
-      {name:"下痢止め・吐き気止め", sub:"感染性胃腸炎・食あたりへの対処。避難所では集団感染リスクが高い", location:"📍救急箱", priority:"recommend", phase:1, flags:"all", qty:"1箱", pack:true},
+      {name:"救急箱（絆創膏・ガーゼ・包帯・三角巾）", sub:"外傷・切り傷・捻挫への応急処置。大・中・小サイズをそれぞれ複数枚。<br>🎒小型セットに厳選", location:"📍洗面所・収納スペース", priority:"required", phase:1, flags:"all", qty:"1セット", pack:true},
+      {name:"消毒液（アルコール・ポビドンヨード）", sub:"傷口の消毒。断水時は水道水で洗えないため消毒液の重要性が増す。<br>🎒小分けボトル各1本", location:"📍洗面所・救急箱", priority:"required", phase:1, flags:"all", qty:"各1本", pack:true},
+      {name:"鎮痛解熱剤（ロキソニン・カロナール等）", sub:"頭痛・発熱・歯痛・打撲痛への対処。避難ストレスで体の不調が出やすい。複数種類あると安心。<br>🎒全量", location:"📍救急箱", priority:"required", phase:1, flags:"all", qty:"30錠以上", pack:true},
+      {name:"胃腸薬・整腸剤", sub:"避難ストレス・水や食事の変化による消化器症状への対処。下痢は脱水を招くため特に重要。<br>🎒全量", location:"📍救急箱", priority:"required", phase:1, flags:"all", qty:"1箱", pack:true},
+      {name:"下痢止め・吐き気止め", sub:"感染性胃腸炎・食あたりへの対処。避難所では集団感染リスクが高い。<br>🎒全量", location:"📍救急箱", priority:"recommend", phase:1, flags:"all", qty:"1箱", pack:true},
       {name:"風邪薬（総合感冒薬）", sub:"発熱・鼻水・咳への対処。総合型の方が症状別より管理しやすい", location:"📍救急箱", priority:"recommend", phase:1, flags:"all", qty:"1箱"},
-      {name:"処方薬（3〜4週間分）", sub:"持病の継続治療。災害時は医療機関が混雑・機能停止することがある。主治医に相談して多めに処方してもらう", location:"📍救急箱・枕元", priority:"required", phase:1, flags:"all", qty:"4週間分", pack:true},
-      {name:"お薬手帳コピー＋スキャンデータ", sub:"避難先の医療機関での診療補助・薬の再処方。クラウドにも保存しておく。高齢者のいる家庭では特に重要", location:"📍避難リュック・クラウド", priority:"required", phase:1, flags:"all", qty:"1部", pack:true},
+      {name:"処方薬（3〜4週間分）", sub:"持病の継続治療。災害時は医療機関が混雑・機能停止することがある。主治医に相談して多めに処方してもらう。<br>🎒全量", location:"📍救急箱・枕元", priority:"required", phase:1, flags:"all", qty:"4週間分", pack:true},
+      {name:"お薬手帳コピー＋スキャンデータ", sub:"避難先の医療機関での診療補助・薬の再処方。クラウドにも保存しておく。高齢者のいる家庭では特に重要。<br>🎒全量", location:"📍避難リュック・クラウド", priority:"required", phase:1, flags:"all", qty:"1部", pack:true},
       {name:"体温計", sub:"発熱の確認。デジタル式・非接触式を複数本備蓄", location:"📍救急箱", priority:"required", phase:1, flags:"all", qty:"2本"},
       {name:"血圧計", sub:"高血圧の管理。避難ストレスで血圧が急上昇することがある", location:"📍収納スペース", priority:"required", phase:1, flags:["elder"], qty:"1個"},
-      {name:"マスク（不織布・N95）", sub:"感染症予防・粉塵対策。避難所での集団感染防止に不可欠。100枚以上備蓄推奨", location:"📍収納スペース・避難リュック", priority:"required", phase:1, flags:"all", qty:"100枚以上", pack:true},
-      {name:"使い捨て手袋（ニトリル）", sub:"救護・感染症対処・清掃・トイレ処理。素手で触れないための基本", location:"📍収納スペース・救急箱", priority:"required", phase:1, flags:"all", qty:"100枚以上", pack:true},
-      {name:"目薬", sub:"粉塵・煙・乾燥による目のケア。コンタクトレンズ使用者は特に重要", location:"📍救急箱", priority:"recommend", phase:1, flags:"all", qty:"2本", pack:true},
-      {name:"生理用品", sub:"生理・不正出血への対処。避難ストレスで生理が乱れることも多い。女性がいる家庭は必須。3ヶ月分を目安に", location:"📍収納スペース", priority:"required", phase:1, flags:"all", qty:"3ヶ月分", pack:true},
-      {name:"妊婦用サプリ・鉄剤", sub:"妊娠中の栄養補助。特に鉄分・葉酸は不足しやすい", location:"📍収納スペース", priority:"required", phase:1, flags:["pregnant"], qty:"2ヶ月分", pack:true},
-      {name:"母子手帳・診察券のコピー", sub:"避難先での医療情報の提供。スキャンしてクラウド保存も", location:"📍避難リュック", priority:"required", phase:1, flags:["baby","pregnant"], qty:"1部", pack:true},
-      {name:"紙おむつ", sub:"乳幼児の排泄処理。1日8〜10枚前後が目安。2週間分以上を備蓄", location:"📍育児用品収納", priority:"required", phase:1, flags:["baby"], qty:"2週間分以上", pack:true},
-      {name:"おしりふき", sub:"乳幼児のおむつ替え・全身の清拭・手拭きにも応用可。大量備蓄推奨", location:"📍育児用品収納", priority:"required", phase:1, flags:["baby"], qty:"大量", pack:true},
+      {name:"マスク（不織布・N95）", sub:"感染症予防・粉塵対策。避難所での集団感染防止に不可欠。100枚以上備蓄推奨。<br>🎒5〜10枚", location:"📍収納スペース・避難リュック", priority:"required", phase:1, flags:"all", qty:"100枚以上", pack:true},
+      {name:"使い捨て手袋（ニトリル）", sub:"救護・感染症対処・清掃・トイレ処理。素手で触れないための基本。<br>🎒10枚程度", location:"📍収納スペース・救急箱", priority:"required", phase:1, flags:"all", qty:"100枚以上", pack:true},
+      {name:"目薬", sub:"粉塵・煙・乾燥による目のケア。コンタクトレンズ使用者は特に重要。<br>🎒全量", location:"📍救急箱", priority:"recommend", phase:1, flags:"all", qty:"2本", pack:true},
+      {name:"生理用品", sub:"生理・不正出血への対処。避難ストレスで生理が乱れることも多い。女性がいる家庭は必須。3ヶ月分を目安に。<br>🎒数日分", location:"📍収納スペース", priority:"required", phase:1, flags:"all", qty:"3ヶ月分", pack:true},
+      {name:"妊婦用サプリ・鉄剤", sub:"妊娠中の栄養補助。特に鉄分・葉酸は不足しやすい。<br>🎒全量", location:"📍収納スペース", priority:"required", phase:1, flags:["pregnant"], qty:"2ヶ月分", pack:true},
+      {name:"母子手帳・診察券のコピー", sub:"避難先での医療情報の提供。スキャンしてクラウド保存も。<br>🎒全量", location:"📍避難リュック", priority:"required", phase:1, flags:["baby","pregnant"], qty:"1部", pack:true},
+      {name:"紙おむつ", sub:"乳幼児の排泄処理。1日8〜10枚前後が目安。2週間分以上を備蓄。<br>🎒1〜2日分", location:"📍育児用品収納", priority:"required", phase:1, flags:["baby"], qty:"2週間分以上", pack:true},
+      {name:"おしりふき", sub:"乳幼児のおむつ替え・全身の清拭・手拭きにも応用可。大量備蓄推奨。<br>🎒1パック", location:"📍育児用品収納", priority:"required", phase:1, flags:["baby"], qty:"大量", pack:true},
       {name:"介護用おむつ・パッド", sub:"高齢者・寝たきりの方の排泄処理。避難所でのプライバシー確保にも", location:"📍収納スペース", priority:"required", phase:1, flags:["elder"], qty:"2週間分"},
-      {name:"ペット用常備薬", sub:"ペットの持病継続治療。かかりつけ医に相談し1〜2ヶ月分確保", location:"📍ペット用品収納", priority:"required", phase:1, flags:["pet"], qty:"1〜2ヶ月分", pack:true},
-      {name:"老眼鏡の予備", sub:"視力矯正。コンタクトが使えない・メガネが壊れた場合の代替。高齢者は特に忘れずに", location:"📍枕元・避難リュック", priority:"required", phase:1, flags:["elder"], qty:"1本", pack:true},
-      {name:"予備のメガネ・コンタクトレンズ", sub:"視力矯正。就寝中の地震でメガネが行方不明になるケースが多い。枕元保管が鉄則", location:"📍枕元", priority:"required", phase:1, flags:"all", qty:"1セット/人", pack:true},
+      {name:"ペット用常備薬", sub:"ペットの持病継続治療。かかりつけ医に相談し1〜2ヶ月分確保。<br>🎒全量", location:"📍ペット用品収納", priority:"required", phase:1, flags:["pet"], qty:"1〜2ヶ月分", pack:true},
+      {name:"老眼鏡の予備", sub:"視力矯正。コンタクトが使えない・メガネが壊れた場合の代替。高齢者は特に忘れずに。<br>🎒全量", location:"📍枕元・避難リュック", priority:"required", phase:1, flags:["elder"], qty:"1本", pack:true},
+      {name:"予備のメガネ・コンタクトレンズ", sub:"視力矯正。就寝中の地震でメガネが行方不明になるケースが多い。枕元保管が鉄則。<br>🎒全量", location:"📍枕元", priority:"required", phase:1, flags:"all", qty:"1セット/人", pack:true},
       {name:"AED（自動体外式除細動器）", sub:"心停止時の蘇生補助。マンションは共用部に設置されていることが多いので場所を確認。戸建て・高齢者同居なら導入を検討", location:"📍玄関・リビング付近", priority:"nice", phase:3, flags:["elder","house"], qty:"検討"},
     ]
   },
@@ -508,10 +508,10 @@ const CATEGORIES = [
       {name:"BOS防臭袋（使用済みトイレ袋・おむつ用）", sub:"使用済みトイレ袋・おむつの防臭保管。1袋ずつ入れて密閉するのが鉄則。においを完全にシャットアウトできる", location:"📍トイレ付近・収納スペース", priority:"required", phase:1, flags:"all", qty:"大量"},
       {name:"密閉ゴミ箱・バケツ（フタ付き）", sub:"使用済みトイレ袋の一時保管。フタ付きで密閉できるものが必須。収集が再開するまでの保管に", location:"📍トイレ付近", priority:"required", phase:1, flags:"all", qty:"1〜2個"},
       {name:"目隠しテント・パーテーション", sub:"トイレ・着替えのプライバシー確保。精神的健康に直結。避難所・屋外避難時に特に重要", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"1個"},
-      {name:"手指消毒ジェル", sub:"水が使えない時の手指の感染症対策。トイレ後・食事前は必ず使用", location:"📍各部屋・避難リュック", priority:"required", phase:1, flags:"all", qty:"5本以上", pack:true},
-      {name:"ウェットティッシュ（ノンアルコール）", sub:"体・手・顔の清拭。入浴できない期間の基本的な清潔管理", location:"📍各部屋・収納スペース", priority:"required", phase:1, flags:"all", qty:"20パック以上", pack:true},
+      {name:"手指消毒ジェル", sub:"水が使えない時の手指の感染症対策。トイレ後・食事前は必ず使用。<br>🎒1本", location:"📍各部屋・避難リュック", priority:"required", phase:1, flags:"all", qty:"5本以上", pack:true},
+      {name:"ウェットティッシュ（ノンアルコール）", sub:"体・手・顔の清拭。入浴できない期間の基本的な清潔管理。<br>🎒1〜2パック", location:"📍各部屋・収納スペース", priority:"required", phase:1, flags:"all", qty:"20パック以上", pack:true},
       {name:"ドライシャンプー", sub:"断水時の頭皮ケア。においやかゆみを防ぎ精神的ストレスを軽減", location:"📍洗面所", priority:"recommend", phase:2, flags:"all", qty:"3本"},
-      {name:"水のいらない歯磨きジェル・口腔ケアスプレー", sub:"断水時の口腔ケア。口腔内の細菌増殖は肺炎の原因になるため重要。高齢者は特に注意", location:"📍洗面所・避難リュック", priority:"recommend", phase:1, flags:"all", qty:"2本", pack:true},
+      {name:"水のいらない歯磨きジェル・口腔ケアスプレー", sub:"断水時の口腔ケア。口腔内の細菌増殖は肺炎の原因になるため重要。高齢者は特に注意。<br>🎒全量", location:"📍洗面所・避難リュック", priority:"recommend", phase:1, flags:"all", qty:"2本", pack:true},
       {name:"洗口液（マウスウォッシュ）", sub:"水なしでの口腔清潔維持。水のいらない歯磨きと組み合わせて使用", location:"📍洗面所", priority:"recommend", phase:2, flags:"all", qty:"2本"},
       {name:"石鹸（固形・液体）", sub:"手洗いによる感染症予防。基本中の基本。水が少なくても泡立てて拭き取る使い方も", location:"📍洗面所・各部屋", priority:"required", phase:1, flags:"all", qty:"5個以上"},
       {name:"ボディシート・除菌シート", sub:"入浴できない期間の体臭・汗の管理。精神的ストレス軽減にも", location:"📍洗面所・収納スペース", priority:"recommend", phase:2, flags:"all", qty:"10パック以上"},
@@ -523,21 +523,21 @@ const CATEGORIES = [
   {
     id:"safety", icon:"🪖", title:"身の安全・避難",
     items:[
-      {name:"防災ヘルメット（なければ防災頭巾）", sub:"地震直後の落下物・崩壊から頭を守る。最優先品。ヘルメット推奨、ない場合は防災頭巾でも可。枕元に常備", location:"📍枕元", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"防災ヘルメット（なければ防災頭巾）", sub:"地震直後の落下物・崩壊から頭を守る。最優先品。ヘルメット推奨、ない場合は防災頭巾でも可。枕元に常備。<br>🎒全量", location:"📍枕元", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
       {name:"室内用スリッパ・厚底サンダル（枕元常備）", sub:"就寝中の地震でガラスが散乱した床を裸足で歩かないための必需品。枕元に必ず置く習慣を", location:"📍枕元", priority:"required", phase:1, flags:"all", qty:"人数分"},
       {name:"ほうき・ちりとり", sub:"地震後に割れたガラス・瓦礫の清掃。掃除機は停電時に使えない。玄関付近に常備", location:"📍玄関付近", priority:"required", phase:1, flags:"all", qty:"1セット"},
-      {name:"軍手・皮手袋（厚手）", sub:"ガラス・瓦礫の撤去。薄い軍手は貫通するため、厚手の皮手袋が理想", location:"📍枕元・避難リュック", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"軍手・皮手袋（厚手）", sub:"ガラス・瓦礫の撤去。薄い軍手は貫通するため、厚手の皮手袋が理想。<br>🎒全量", location:"📍枕元・避難リュック", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
       {name:"安全靴・厚底スニーカー", sub:"瓦礫・ガラスの踏み抜き防止。長靴とは用途が異なる（長靴は浸水対処）。ガラスの上を歩ける靴が必要", location:"📍玄関・枕元", priority:"required", phase:1, flags:"all", qty:"人数分"},
       {name:"長靴", sub:"浸水した道を歩く・泥だらけの瓦礫道・雨天避難。水害リスクの有無に関わらず雨が降る可能性もあるため全員備蓄推奨", location:"📍玄関・収納スペース", priority:"recommend", phase:1, flags:"all", qty:"人数分"},
-      {name:"ホイッスル（笛）", sub:"瓦礫に埋まった際・声が出ない状況での救助要請。声より遠くまで届く。カバンの外側に付けておくと緊急時に取り出しやすい", location:"📍枕元・普段使いのバッグ", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
-      {name:"防犯ブザー", sub:"避難所での性被害・犯罪抑止。瓦礫に埋まった時の救助要請（ホイッスルと用途が重なるが音量が違う）。性別問わず全員が持つべき", location:"📍普段使いのバッグ・枕元", priority:"recommend", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"ホイッスル（笛）", sub:"瓦礫に埋まった際・声が出ない状況での救助要請。声より遠くまで届く。カバンの外側に付けておくと緊急時に取り出しやすい。<br>🎒全量", location:"📍枕元・普段使いのバッグ", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"防犯ブザー", sub:"避難所での性被害・犯罪抑止。瓦礫に埋まった時の救助要請（ホイッスルと用途が重なるが音量が違う）。性別問わず全員が持つべき。<br>🎒全量", location:"📍普段使いのバッグ・枕元", priority:"recommend", phase:1, flags:"all", qty:"人数分", pack:true},
       {name:"ガラス飛散防止フィルム（窓用）", sub:"地震で割れた窓ガラスの室内飛散を防ぐ。怪我の予防に非常に効果的。事前施工が必要→事前対処リストも参照", location:"📍全窓に施工済みが理想", priority:"required", phase:1, flags:"all", qty:"全窓分"},
       {name:"バール・ハンマー", sub:"地震で歪んだ扉の強制開扉・建物崩壊時の脱出補助。マンションでも扉が歪んで開かなくなるケースは多い", location:"📍玄関付近", priority:"recommend", phase:1, flags:"all", qty:"1本"},
-      {name:"ロープ（5〜10m）", sub:"避難・救助・荷物の固定・応急修理に多用途", location:"📍収納スペース・避難リュック", priority:"recommend", phase:2, flags:"all", qty:"1本", pack:true},
+      {name:"ロープ（5〜10m）", sub:"避難・救助・荷物の固定・応急修理に多用途。<br>🎒全量", location:"📍収納スペース・避難リュック", priority:"recommend", phase:2, flags:"all", qty:"1本", pack:true},
       {name:"避難リュック（72時間セット）", sub:"緊急避難時の持ち出し品一式。玄関に常備。中身を年1回見直す", location:"📍玄関", priority:"required", phase:1, flags:"all", qty:"人数分"},
       {name:"車用緊急脱出ハンマー（シートカッター付き）", sub:"車ごと水没・衝突時の窓ガラス破壊・シートベルト切断。運転席から手が届く位置に固定", location:"📍運転席付近", priority:"required", phase:1, flags:["car"], qty:"1個"},
-      {name:"ライフジャケット（浮力体）", sub:"水害時の水没・流水からの保護。津波・洪水リスクのある地域では必携", location:"📍玄関・収納スペース", priority:"required", phase:1, flags:["coast"], qty:"人数分", pack:true},
-      {name:"防水袋（ドライバッグ）", sub:"重要書類・電子機器・食料の防水保護。水害時の避難時だけでなく、雨天時の外出・保管にも有用", location:"📍収納スペース・避難リュック", priority:"recommend", phase:1, flags:"all", qty:"2〜3個", pack:true},
+      {name:"ライフジャケット（浮力体）", sub:"水害時の水没・流水からの保護。津波・洪水リスクのある地域では必携。<br>🎒全量", location:"📍玄関・収納スペース", priority:"required", phase:1, flags:["coast"], qty:"人数分", pack:true},
+      {name:"防水袋（ドライバッグ）", sub:"重要書類・電子機器・食料の防水保護。水害時の避難時だけでなく、雨天時の外出・保管にも有用。<br>🎒全量", location:"📍収納スペース・避難リュック", priority:"recommend", phase:1, flags:"all", qty:"2〜3個", pack:true},
       {name:"土のう袋", sub:"自宅への浸水を防ぐ応急的な水止め。低地・浸水リスクエリアの基本対策", location:"📍玄関・収納スペース", priority:"required", phase:1, flags:["coast","mansion_low"], qty:"20袋以上"},
       {name:"登山用ストック・杖", sub:"瓦礫の多い道での歩行補助・高齢者の移動補助", location:"📍収納スペース", priority:"recommend", phase:2, flags:["elder","mountain"], qty:"人数分"},
     ]
@@ -546,8 +546,8 @@ const CATEGORIES = [
     id:"info", icon:"📡", title:"情報・通信",
     items:[
       {name:"AM/FMラジオ（電池・手回し兼用）", sub:"停電時の情報収集の最重要手段。NHKが基本。ハンドクランク充電ラジオと兼用できるタイプが最も効率的", location:"📍リビング・収納スペース", priority:"required", phase:1, flags:"all", qty:"1台"},
-      {name:"ハザードマップ（紙印刷版）", sub:"自宅・避難場所・避難ルートの浸水・崩壊リスク確認。自治体サイトからDL・印刷して防水袋に保管", location:"📍避難リュック", priority:"required", phase:1, flags:"all", qty:"1部", pack:true},
-      {name:"緊急連絡先リスト（紙）", sub:"スマホが使えない時の家族・親戚・かかりつけ医・自治会への連絡。暗記も重要", location:"📍避難リュック・財布", priority:"required", phase:1, flags:"all", qty:"1部", pack:true},
+      {name:"ハザードマップ（紙印刷版）", sub:"自宅・避難場所・避難ルートの浸水・崩壊リスク確認。自治体サイトからDL・印刷して防水袋に保管。<br>🎒全量", location:"📍避難リュック", priority:"required", phase:1, flags:"all", qty:"1部", pack:true},
+      {name:"緊急連絡先リスト（紙）", sub:"スマホが使えない時の家族・親戚・かかりつけ医・自治会への連絡。暗記も重要。<br>🎒全量", location:"📍避難リュック・財布", priority:"required", phase:1, flags:"all", qty:"1部", pack:true},
       {name:"スマホにオフライン地図をDL（Google Maps等）", sub:"通信障害時のナビゲーション。車のカーナビよりスマホオフライン地図が現実的。避難ルートを事前にDL", location:"📍スマホ設定済み？", priority:"required", phase:1, flags:"all", qty:"設定済み？"},
       {name:"NHKニュースアプリ・Yahoo!防災アプリ", sub:"プッシュ通知で緊急情報を受信。事前ダウンロード・通知設定が必須", location:"📍スマホ設定済み？", priority:"required", phase:1, flags:"all", qty:"設定済み？"},
       {name:"重要書類の写真撮影・クラウド保存", sub:"紛失・焼失時のバックアップ。通帳・権利証・保険証・マイナンバーをスキャンしてクラウドに保存", location:"📍クラウド保存済み？", priority:"required", phase:1, flags:"all", qty:"実施済み？"},
@@ -558,54 +558,54 @@ const CATEGORIES = [
   {
     id:"warmth", icon:"🧣", title:"防寒・防暑・快適",
     items:[
-      {name:"アルミ製保温ブランケット（エマージェンシー）", sub:"体温低下防止・防寒。コンパクトで避難リュックに必携。体温を反射して保温する仕組み", location:"📍避難リュック", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"アルミ製保温ブランケット（エマージェンシー）", sub:"体温低下防止・防寒。コンパクトで避難リュックに必携。体温を反射して保温する仕組み。<br>🎒全量", location:"📍避難リュック", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
       {name:"寝袋（シュラフ）", sub:"避難所・車中泊・停電時の就寝。0〜10℃対応タイプ推奨。春秋以外は厚手が安心", location:"📍収納スペース", priority:"required", phase:1, flags:"all", qty:"人数分"},
       {name:"毛布", sub:"防寒・床への敷物・負傷者の保温・目隠し。重ねて使える。夏場でも避難所は冷えることがある", location:"📍収納スペース", priority:"required", phase:1, flags:"all", qty:"人数分×2"},
-      {name:"カイロ（貼るタイプ・貼らないタイプ）", sub:"手軽な防寒・体温維持。応急処置での局所加温にも。湯たんぽと使い分けで消費量を節約", location:"📍収納スペース・避難リュック", priority:"recommend", phase:1, flags:"all", qty:"50個以上", pack:true},
-      {name:"防寒着・フリースジャケット", sub:"室内外での体温維持。避難袋の中に1着追加しておく", location:"📍避難リュック・収納スペース", priority:"recommend", phase:1, flags:"all", qty:"人数分", pack:true},
-      {name:"レインコート・ポンチョ", sub:"雨天避難・防寒・簡易防風。傘より両手が使えるポンチョ推奨", location:"📍玄関・避難リュック", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
-      {name:"替えの下着・靴下（3日分）", sub:"衛生管理の基本。洗えない期間の清潔維持", location:"📍収納スペース・避難リュック", priority:"required", phase:1, flags:"all", qty:"3組/人", pack:true},
+      {name:"カイロ（貼るタイプ・貼らないタイプ）", sub:"手軽な防寒・体温維持。応急処置での局所加温にも。湯たんぽと使い分けで消費量を節約。<br>🎒5〜10個", location:"📍収納スペース・避難リュック", priority:"recommend", phase:1, flags:"all", qty:"50個以上", pack:true},
+      {name:"防寒着・フリースジャケット", sub:"室内外での体温維持。避難袋の中に1着追加しておく。<br>🎒全量", location:"📍避難リュック・収納スペース", priority:"recommend", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"レインコート・ポンチョ", sub:"雨天避難・防寒・簡易防風。傘より両手が使えるポンチョ推奨。<br>🎒全量", location:"📍玄関・避難リュック", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"替えの下着・靴下（3日分）", sub:"衛生管理の基本。洗えない期間の清潔維持。<br>🎒全量", location:"📍収納スペース・避難リュック", priority:"required", phase:1, flags:"all", qty:"3組/人", pack:true},
       {name:"夏用冷感グッズ（瞬間冷却パック・冷感タオル）", sub:"夏の被災時の熱中症予防。停電でエアコンが使えない環境での体温管理は死活問題", location:"📍収納スペース", priority:"recommend", phase:1, flags:"all", qty:"適量"},
       {name:"充電式・乾電池式扇風機", sub:"夏場の停電時における熱中症対策。首掛け型は手軽で効果的", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"1〜2台"},
-      {name:"帽子・サングラス", sub:"長時間の屋外作業・避難時の日差し・粉塵対策", location:"📍収納スペース・避難リュック", priority:"recommend", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"帽子・サングラス", sub:"長時間の屋外作業・避難時の日差し・粉塵対策。<br>🎒全量", location:"📍収納スペース・避難リュック", priority:"recommend", phase:1, flags:"all", qty:"人数分", pack:true},
       {name:"ペット用毛布・ケージカバー", sub:"ペットの体温管理。動物は体温調節が難しいため防寒は人間と同様に重要", location:"📍ペット用品収納", priority:"recommend", phase:1, flags:["pet"], qty:"人数分"},
     ]
   },
   {
     id:"mental", icon:"😊", title:"精神的健康・コミュニケーション",
     items:[
-      {name:"子ども向けおもちゃ・絵本（お気に入りのもの）", sub:"子どもの不安・ストレスを和らげる。見知らぬ環境での情緒安定に効果的。お気に入りのものが最も効果的", location:"📍避難リュック", priority:"required", phase:1, flags:["baby","kids"], qty:"数点", pack:true},
-      {name:"ぬいぐるみ・安心グッズ", sub:"子どもの愛着対象が精神的安定に非常に有効。避難リュックに1点は必ず入れる", location:"📍枕元・避難リュック", priority:"required", phase:1, flags:["baby","kids"], qty:"1点", pack:true},
+      {name:"子ども向けおもちゃ・絵本（お気に入りのもの）", sub:"子どもの不安・ストレスを和らげる。見知らぬ環境での情緒安定に効果的。お気に入りのものが最も効果的。<br>🎒全量", location:"📍避難リュック", priority:"required", phase:1, flags:["baby","kids"], qty:"数点", pack:true},
+      {name:"ぬいぐるみ・安心グッズ", sub:"子どもの愛着対象が精神的安定に非常に有効。避難リュックに1点は必ず入れる。<br>🎒全量", location:"📍枕元・避難リュック", priority:"required", phase:1, flags:["baby","kids"], qty:"1点", pack:true},
       {name:"ボードゲーム・トランプ・カード", sub:"避難所での長時間の暇つぶし・コミュニティ形成。人との交流が精神的回復を助ける", location:"📍収納スペース", priority:"recommend", phase:2, flags:"all", qty:"1〜2点"},
-      {name:"お気に入りのお菓子・飲み物", sub:"精神的安定剤。日常の味・香りが強いストレス環境での心の支えになる", location:"📍収納スペース・避難リュック", priority:"recommend", phase:1, flags:"all", qty:"適量", pack:true},
-      {name:"ノート・鉛筆・ペン", sub:"情報記録・伝言メモ・子どもの遊び・精神的整理。防水袋に入れて保管", location:"📍避難リュック", priority:"recommend", phase:1, flags:"all", qty:"2セット", pack:true},
-      {name:"家族写真（プリント版）", sub:"精神的な支え。避難所での身元確認や伝言板への掲示にもなる", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"数枚", pack:true},
-      {name:"耳栓・アイマスク", sub:"避難所での騒音・光から睡眠を守る。睡眠の質は免疫力・判断力に直結", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"人数分", pack:true},
+      {name:"お気に入りのお菓子・飲み物", sub:"精神的安定剤。日常の味・香りが強いストレス環境での心の支えになる。<br>🎒全量", location:"📍収納スペース・避難リュック", priority:"recommend", phase:1, flags:"all", qty:"適量", pack:true},
+      {name:"ノート・鉛筆・ペン", sub:"情報記録・伝言メモ・子どもの遊び・精神的整理。防水袋に入れて保管。<br>🎒全量", location:"📍避難リュック", priority:"recommend", phase:1, flags:"all", qty:"2セット", pack:true},
+      {name:"家族写真（プリント版）", sub:"精神的な支え。避難所での身元確認や伝言板への掲示にもなる。<br>🎒全量", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"数枚", pack:true},
+      {name:"耳栓・アイマスク", sub:"避難所での騒音・光から睡眠を守る。睡眠の質は免疫力・判断力に直結。<br>🎒全量", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"人数分", pack:true},
       {name:"ペット用おもちゃ・ケアグッズ", sub:"ストレスを受けやすいペットの精神的ケア。環境変化によるストレスは体調不良の原因になる", location:"📍ペット用品収納", priority:"recommend", phase:2, flags:["pet"], qty:"数点"},
     ]
   },
   {
     id:"documents", icon:"📄", title:"重要書類・お金",
     items:[
-      {name:"現金（小銭含む）", sub:"停電でカード・電子マネーが使えない時の決済手段。1,000円札・100円玉中心に。5万円以上を目安", location:"📍避難リュック・分散保管", priority:"required", phase:1, flags:"all", qty:"5万円以上", pack:true},
-      {name:"通帳・キャッシュカードのコピー", sub:"口座番号の確認・窓口での本人確認補助。原本は持ち出し、コピーは家とクラウドに", location:"📍避難リュック", priority:"required", phase:1, flags:"all", qty:"1部", pack:true},
-      {name:"保険証・マイナンバーカードのコピー", sub:"避難先の医療機関での受診・各種手続きの身分証明", location:"📍避難リュック", priority:"required", phase:1, flags:"all", qty:"1部", pack:true},
-      {name:"不動産・住居関連の重要書類（権利証・賃貸契約書等）", sub:"住居の権利確認・罹災証明申請・保険請求。家を失った際・再建時に必要", location:"📍避難リュック・防水袋", priority:"recommend", phase:2, flags:"all", qty:"1部", pack:true},
-      {name:"印鑑（実印・認印）", sub:"罹災証明書の申請・各種行政手続き・保険請求", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"2本", pack:true},
-      {name:"緊急連絡先カード（財布携帯用）", sub:"スマホなしで家族・親戚に連絡するための手段。名刺サイズに印刷して財布に常時携帯", location:"📍財布・各人のバッグ", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
-      {name:"パスポート（コピー）", sub:"外国人家族がいる場合・海外からの支援受け取りの際などに身分証明として使用", location:"📍避難リュック", priority:"nice", phase:3, flags:"all", qty:"1部", pack:true},
+      {name:"現金（小銭含む）", sub:"停電でカード・電子マネーが使えない時の決済手段。1,000円札・100円玉中心に。5万円以上を目安。<br>🎒全量", location:"📍避難リュック・分散保管", priority:"required", phase:1, flags:"all", qty:"5万円以上", pack:true},
+      {name:"通帳・キャッシュカードのコピー", sub:"口座番号の確認・窓口での本人確認補助。原本は持ち出し、コピーは家とクラウドに。<br>🎒全量", location:"📍避難リュック", priority:"required", phase:1, flags:"all", qty:"1部", pack:true},
+      {name:"保険証・マイナンバーカードのコピー", sub:"避難先の医療機関での受診・各種手続きの身分証明。<br>🎒全量", location:"📍避難リュック", priority:"required", phase:1, flags:"all", qty:"1部", pack:true},
+      {name:"不動産・住居関連の重要書類（権利証・賃貸契約書等）", sub:"住居の権利確認・罹災証明申請・保険請求。家を失った際・再建時に必要。<br>🎒全量", location:"📍避難リュック・防水袋", priority:"recommend", phase:2, flags:"all", qty:"1部", pack:true},
+      {name:"印鑑（実印・認印）", sub:"罹災証明書の申請・各種行政手続き・保険請求。<br>🎒全量", location:"📍避難リュック", priority:"recommend", phase:2, flags:"all", qty:"2本", pack:true},
+      {name:"緊急連絡先カード（財布携帯用）", sub:"スマホなしで家族・親戚に連絡するための手段。名刺サイズに印刷して財布に常時携帯。<br>🎒全量", location:"📍財布・各人のバッグ", priority:"required", phase:1, flags:"all", qty:"人数分", pack:true},
+      {name:"パスポート（コピー）", sub:"外国人家族がいる場合・海外からの支援受け取りの際などに身分証明として使用。<br>🎒全量", location:"📍避難リュック", priority:"nice", phase:3, flags:"all", qty:"1部", pack:true},
     ]
   },
   {
     id:"tools", icon:"🔧", title:"工具・多目的ツール",
     items:[
-      {name:"多機能ナイフ（十徳ナイフ）", sub:"缶切り・ドライバー・はさみ・ナイフを1本で代替。スイスアーミー等", location:"📍避難リュック", priority:"recommend", phase:1, flags:"all", qty:"1本", pack:true},
-      {name:"ガムテープ（布・ビニール）", sub:"窓の養生・割れたガラスの応急補修・梱包・骨折固定の補助など多用途。防災の万能品", location:"📍収納スペース・避難リュック", priority:"required", phase:1, flags:"all", qty:"3〜5個", pack:true},
+      {name:"多機能ナイフ（十徳ナイフ）", sub:"缶切り・ドライバー・はさみ・ナイフを1本で代替。スイスアーミー等。<br>🎒全量", location:"📍避難リュック", priority:"recommend", phase:1, flags:"all", qty:"1本", pack:true},
+      {name:"ガムテープ（布・ビニール）", sub:"窓の養生・割れたガラスの応急補修・梱包・骨折固定の補助など多用途。防災の万能品。<br>🎒1個", location:"📍収納スペース・避難リュック", priority:"required", phase:1, flags:"all", qty:"3〜5個", pack:true},
       {name:"養生テープ", sub:"剥がせるタイプ。ガラスへの貼り付け・目印・伝言用など。ガムテープとセットで備蓄", location:"📍収納スペース", priority:"recommend", phase:1, flags:"all", qty:"3個"},
-      {name:"マジックペン（太・細）", sub:"避難所での氏名記入・壁への伝言・荷物の識別", location:"📍避難リュック", priority:"recommend", phase:1, flags:"all", qty:"数本", pack:true},
+      {name:"マジックペン（太・細）", sub:"避難所での氏名記入・壁への伝言・荷物の識別。<br>🎒全量", location:"📍避難リュック", priority:"recommend", phase:1, flags:"all", qty:"数本", pack:true},
       {name:"ブルーシート（大・中）", sub:"①屋根・外壁の雨漏り応急修理（戸建て）②屋外での雨避けスペース作り③荷物・家財の保護④避難所の仕切り・床敷き。5m×5mが汎用的", location:"📍収納スペース・屋外倉庫", priority:"recommend", phase:2, flags:"all", qty:"2〜3枚"},
       {name:"スコップ・ショベル（折りたたみ）", sub:"土砂災害後の撤去・瓦礫除去・雪かき。土砂リスクがない地域でも瓦礫処理に使える場面がある。折りたたみ式が収納しやすい", location:"📍収納スペース・車内", priority:"recommend", phase:2, flags:"all", qty:"1〜2本"},
-      {name:"防水袋・ジップロック（各サイズ）", sub:"重要書類・食品・電子機器の防水保護。多用途で大量備蓄推奨", location:"📍収納スペース・各場所", priority:"required", phase:1, flags:"all", qty:"大量", pack:true},
+      {name:"防水袋・ジップロック（各サイズ）", sub:"重要書類・食品・電子機器の防水保護。多用途で大量備蓄推奨。<br>🎒数枚", location:"📍収納スペース・各場所", priority:"required", phase:1, flags:"all", qty:"大量", pack:true},
       {name:"自転車（折りたたみ不問）", sub:"ガス欠・渋滞・公共交通停止時の代替移動手段。徒歩より格段に行動範囲が広がる", location:"📍駐輪場・玄関", priority:"nice", phase:3, flags:"all", qty:"検討"},
       {name:"車載工具・ジャッキ・スペアタイヤ", sub:"タイヤのパンク修理・緊急時の自己救助。積んであるか定期確認を", location:"📍車内（トランク）", priority:"recommend", phase:1, flags:["car"], qty:"確認"},
       {name:"ガソリン携行缶＋燃料", sub:"ガス欠時の緊急補給。10L以上備蓄。専用の金属製携行缶を使用（プラスチック不可）", location:"📍屋外・ガレージ（直射日光を避ける）", priority:"recommend", phase:1, flags:["car"], qty:"10L以上"},
@@ -743,7 +743,7 @@ function matchPack(item) { return !activePackFilter || !!item.pack; }
 function badge(p) {
   if (p==='required')  return '<span class="badge badge-r">必須</span>';
   if (p==='recommend') return '<span class="badge badge-y">推奨</span>';
-  return '<span class="badge badge-b">あると安心</span>';
+  return '<span class="badge badge-b">安心</span>';
 }
 function phaseBadge(p) { return `<span class="phase-badge phase-${p}">P${p}</span>`; }
 function saveState() {
@@ -777,16 +777,16 @@ function renderSections() {
       const qty = quantities[id] || '';
       if (rel) { catT++; totV++; if(chk){catC++;totC++;}else{totR++;if(item.priority==='required')reqR++;} }
       const rc = !rel ? 'dimmed-item' : (chk ? 'checked-item' : '');
-      const packIcon = item.pack ? '<span class="item-pack-badge" title="避難リュックに入れる">🎒</span>' : '';
       rows += `<tr class="${rc}" id="row-${CSS.escape(id)}">
         <td class="check-cell"><input type="checkbox" class="item-check" ${chk?'checked':''} onchange="toggleCheck('${id}')"></td>
         <td>
-          <div class="item-name ${chk?'checked-label':''}">${item.name}${packIcon}</div>
+          <div class="item-name ${chk?'checked-label':''}">
+            <span class="item-name-text">${item.name}</span>${item.qty&&item.qty!=='検討'&&item.qty!=='確認'&&item.qty!=='設定済み？'&&item.qty!=='実施済み？'&&item.qty!=='必要分' ? `<span class="qty-badge">${item.qty}</span>` : ''}
+          </div>
           <div class="item-sub">${item.sub||''}</div>
           ${item.location?`<div class="item-location">${item.location}</div>`:''}
         </td>
         <td style="text-align:right;padding-right:12px;vertical-align:middle;">${badge(item.priority)}</td>
-        <td class="qty-cell"><input class="qty-input" type="text" value="${qty||item.qty||''}" onchange="saveQty('${id}',this.value)" placeholder="${item.qty||''}"></td>
       </tr>`;
     });
 
