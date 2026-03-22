@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>防災用品チェックリスト v14</title>
+<title>防災用品チェックリスト v15</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -19,13 +19,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:#F2F3F4;color:#1A252F;font
 /* TOP BAR */
 #topbar{background:#1A252F;color:#FFFFFF;padding:13px 20px;display:flex;align-items:center;gap:16px;position:-webkit-sticky;position:sticky;top:0;z-index:1000;box-shadow:0 3px 16px rgba(0,0,0,.5);-webkit-transform:translateZ(0);transform:translateZ(0);}
 #topbar h1{font-size:17px;font-weight:800;letter-spacing:.02em;flex:1;color:#FFFFFF;}
-.pill{background:rgba(255,255,255,.15);border-radius:20px;padding:5px 14px;font-size:12px;font-family:‘DM Mono’,monospace;color:#FFFFFF;font-weight:600;}
 
 /* LAYOUT */
-#app{display:flex;min-height:calc(100vh - 48px);}
+#app{display:flex;min-height:calc(100vh - 54px);}
 
 /* SIDEBAR */
-#sidebar{width:272px;min-width:272px;background:#FFFFFF;border-right:1px solid #D5D8DC;overflow-y:auto;position:sticky;top:48px;height:calc(100vh - 48px);}
+#sidebar{width:272px;min-width:272px;max-width:272px;background:#FFFFFF;border-right:1px solid #D5D8DC;overflow-y:auto;position:sticky;top:54px;height:calc(100vh - 54px);flex-shrink:0;}
 #sidebar h2{font-size:10px;font-weight:700;letter-spacing:.12em;color:#717D7E;text-transform:uppercase;margin-bottom:10px;margin-top:18px;padding-bottom:4px;border-bottom:1px solid #D5D8DC;}
 #sidebar h2:first-child{margin-top:0;}
 
@@ -806,7 +805,6 @@ function renderSections() {
   document.getElementById('stat-remain').textContent  = totR;
   document.getElementById('stat-total').textContent   = totV;
   document.getElementById('stat-req-remain').textContent = reqR;
-  document.getElementById('topbar-stat').textContent = `${totC} / ${totV} 入手済み`;
   saveState();
 }
 
